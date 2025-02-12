@@ -1,0 +1,113 @@
+/* Estilo geral para a página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Cabeçalho da página */
+header {
+    background-color: #870A28;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Navegação */
+nav {
+    background-color: #00613C;
+    padding: 10px;
+    text-align: center;
+    display: flex; /* Ativa o layout flexível */
+    justify-content: center; /* Centraliza os itens horizontalmente */
+    gap: 20px; /* Espaço entre os grupos de menus */
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex; /* Faz com que os itens dentro da ul fiquem lado a lado */
+    gap: 15px; /* Espaçamento entre os itens */
+}
+
+nav ul li {
+    margin: 0; /* Remove margens extras */
+}
+
+nav ul li a {
+    color: #00613C;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 15px; /* Espaçamento dentro das caixinhas */
+    background-color: #FFFF; /* Cor de fundo da caixa */
+    border-radius: 8px; /* Bordas arredondadas */
+    display: inline-block; /* Faz o link se comportar como uma caixa */
+    transition: background 0.3s; /* Efeito suave na troca de cor */
+}
+
+nav ul li a:hover {
+    background-color: #870A28; /* Cor ao passar o mouse */
+    color: white;
+    text-decoration: none;
+}
+
+/* Estilo para a tabela */
+/* Estilo para o container da tabela */
+.table-container {
+    width: 95%;
+    margin: 20px auto;
+    overflow-x: auto;
+}
+
+/* Estilo da tabela */
+table {
+    width: 100%;
+    border-collapse: separate; /* Alterado de collapse para evitar conflitos */
+    border-spacing: 0;
+    margin: 20px 0;
+    table-layout: auto; /* Para que o tamanho das colunas se ajuste ao conteúdo */
+}
+
+/* Estilo das células */
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    white-space: break-word; /* Evita quebra de linha dentro das células */
+}
+
+/* Estilo do cabeçalho */
+table th {
+    background-color: #00613C;
+    color: white;
+}
+
+/* Estilo das linhas alternadas */
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Efeito hover ao passar o mouse */
+table tr:hover {
+    background-color: #00613c23; /* Destaque em amarelo claro */
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Responsividade */
+@media screen and (max-width: 768px) {
+    table {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    table th, table td {
+        padding: 8px;
+    }
+
+    nav ul li {
+        display: block;
+        margin-bottom: 10px;
+    }
+}
