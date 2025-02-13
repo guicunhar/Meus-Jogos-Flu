@@ -53,7 +53,6 @@ nav ul li a:hover {
     text-decoration: none;
 }
 
-/* Estilo para a tabela */
 /* Estilo para o container da tabela */
 .table-container {
     width: 95%;
@@ -73,7 +72,7 @@ table {
 /* Estilo das células */
 table th, table td {
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid white;
     text-align: center;
     white-space: break-word; /* Evita quebra de linha dentro das células */
 }
@@ -91,7 +90,7 @@ table tr:nth-child(even) {
 
 /* Efeito hover ao passar o mouse */
 table tr:hover {
-    background-color: #00613c23; /* Destaque em amarelo claro */
+    background-color: #00613c23;
     transition: background-color 0.3s ease-in-out;
 }
 
