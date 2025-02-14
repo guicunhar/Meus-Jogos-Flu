@@ -33,7 +33,7 @@ def lista_jogos(request):
     context = {'df_jogos': df_jogos.to_html(  index=False)}
     return render(request, 'meus_jogos_app/jogos.html', context)
 
-def estatisticas(request):
+def estatisticas_gerais(request):
     gols = Gol.objects.all()
 
     data_gols = {
@@ -101,4 +101,4 @@ def estatisticas(request):
                'df_mais_jogos': df_mais_jogos.to_html(index=False),
                'df_mais_tec': df_mais_tec.to_html(index=False)}
 
-    return render(request, 'meus_jogos_app/estatisticas.html', context)
+    return render(request, 'meus_jogos_app/estatisticas_gerais.html', context)
