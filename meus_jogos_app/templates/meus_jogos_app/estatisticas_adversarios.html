@@ -38,42 +38,12 @@
     </nav>
     <div class="table-container">
         <div>
-                <div class="section-title">Resultados</div>
-                {{ df_jogos|safe }}
+                <div class="section-title">Mais Jogos</div>
+                {{ df_adversarios|safe }}
         </div>
         <div>
-                <div class="section-title">Gols Marcados e Sofridos</div>
-                {{ df_gols_total|safe }} 
-        </div>
-    </div>
-    <div class="table-container">
-        <div>
-                <div class="section-title">Local do Jogo</div>
-                {{ df_estado|safe }} 
-        </div>
-        <div>
-                <div class="section-title">Estádios</div>
-                {{ df_estadio|safe }} 
-        </div>
-    </div>
-    <div class="table-container">
-        <div>
-                <div class="section-title">Árbitros</div>
-                {{ df_arbitro|safe }} 
-        </div>
-        <div>
-                <div class="section-title">Placares</div>
-                {{ df_placares|safe }}
-        </div>
-    </div>
-    <div class="table-container">
-        <div>
-                <div class="section-title">Campeonatos</div>
-                {{ df_campeonatos|safe }} 
-        </div>
-        <div>
-                <div class="section-title">Público</div>
-                {{ df_publico|safe }}
+                <div class="section-title">Técnicos com Mais Jogos</div>
+                {{ df_local_adv|safe }} 
         </div>
     </div>
     <script src="{% static 'meus_jogos_app/script.js' %}"></script>
