@@ -1,11 +1,13 @@
 from django.contrib import admin
 from django.urls import path
-from meus_jogos_app.views import lista_jogos, estatisticas_jogadores, estatisticas_gerais,estatisticas_adv,estatisticas_datas
+from meus_jogos_app.views import lista_jogos, lista_outros_jogos,jogos_importantes,estatisticas_jogadores, estatisticas_gerais,estatisticas_adv,estatisticas_datas
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', lista_jogos, name='home'),  
-    path('jogos/', lista_jogos, name='jogos'),
+    path('jogos/jogos_flu', lista_jogos, name='jogos_flu'),
+    path('jogos/outros_jogos', lista_outros_jogos, name='outros_jogos'),
+    path('jogos/jogos_importantes', jogos_importantes, name='jogos_importantes'),
     path('estatisticas/dados_gerais/', estatisticas_gerais, name='estatisticas_dados_gerais'),
     path('estatisticas/dados_jogadores/', estatisticas_jogadores, name='estatisticas_dados_jogadores'),
     path('estatisticas/dados_adv/', estatisticas_adv, name='estatisticas_dados_adv'),

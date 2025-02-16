@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Lista de Jogos do Fluminense com detalhes sobre placar, adversário, estádio e mais.">
     <meta name="author" content="Guilherme Cunha">
     <meta name="robots" content="index, follow">
-    <title>Estatísticas</title>
+    <title>Lista de Jogos</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'meus_jogos_app/styles_estatisticas.css' %}">
     <nav class="nav1">
@@ -20,31 +21,21 @@
 </head>
 <body>
     <header>
-        <h1>Estatísticas</h1>
+        <h1>Lista de Jogos</h1>
     </header>
-    <nav class = "nav2">
+    <nav class="nav2">
         <ul>
-            <li><a href="{% url 'estatisticas_dados_gerais' %}">Geral</a></li>
+            <li><a href="{% url 'jogos_flu' %}">Fluminense</a></li>
         </ul>
         <ul>
-            <li><a href="{% url 'estatisticas_dados_jogadores' %}">Jogadores</a></li>
+            <li><a href="{% url 'outros_jogos' %}">Outros Jogos</a></li>
         </ul>
         <ul>
-            <li><a href="{% url 'estatisticas_dados_adv' %}">Adversários</a></li>
-        </ul>
-        <ul>
-            <li><a href="{% url 'estatisticas_dados_datas' %}">Datas</a></li>
+            <li><a href="{% url 'jogos_importantes' %}">Jogos Importantes</a></li>
         </ul>
     </nav>
-    <div class="table-container">
-        <div>
-                <div class="section-title">Mais Jogos</div>
-                {{ df_adversarios|safe }}
-        </div>
-        <div>
-                <div class="section-title">Técnicos com Mais Jogos</div>
-                {{ df_local_adv|safe }} 
-        </div>
+    <div class = "table-container">
+        {{ df_jogos|safe }}
     </div>
     <script src="{% static 'meus_jogos_app/script.js' %}"></script>
 </body>

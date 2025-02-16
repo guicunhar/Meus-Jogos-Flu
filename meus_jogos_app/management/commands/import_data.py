@@ -3,7 +3,7 @@ import requests
 from datetime import datetime
 from io import StringIO
 from django.core.management.base import BaseCommand
-from meus_jogos_app.models import Jogo, Jogador, Gol, Escalacao
+from meus_jogos_app.models import Jogo, Jogador, Gol, Escalacao, OutrosJogos
 import subprocess
 import sys
 
@@ -11,7 +11,6 @@ class Command(BaseCommand):
     help = 'Importa dados de arquivos CSV para as tabelas do banco de dados'
 
     def handle(self, *args, **kwargs):
-
         self.stdout.write(self.style.HTTP_INFO(f'IMPORTANDO DADOS...'))
 
         # Caminhos dos arquivos CSV - ajuste para os seus locais
@@ -19,7 +18,8 @@ class Command(BaseCommand):
         gols_csv = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRFp3ZZZFagId4GnO00-LBfxWy9T5D5yo279D4W--5-NheEj8Txh3UV98NCCHljGAHEFYZ1bKxSDxBG/pub?gid=885969783&single=true&output=csv'
         escalacoes_csv = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRFp3ZZZFagId4GnO00-LBfxWy9T5D5yo279D4W--5-NheEj8Txh3UV98NCCHljGAHEFYZ1bKxSDxBG/pub?gid=2101258360&single=true&output=csv'
         jogadores_csv = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRFp3ZZZFagId4GnO00-LBfxWy9T5D5yo279D4W--5-NheEj8Txh3UV98NCCHljGAHEFYZ1bKxSDxBG/pub?gid=601199534&single=true&output=csv'
-
+        outros_jogos_csv = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRFp3ZZZFagId4GnO00-LBfxWy9T5D5yo279D4W--5-NheEj8Txh3UV98NCCHljGAHEFYZ1bKxSDxBG/pub?gid=1595021343&single=true&output=csv'
+        
         # Importa dados dos jogos
         self.importar_jogos(jogos_csv)
 
@@ -31,6 +31,8 @@ class Command(BaseCommand):
 
         # Importa dados das escalações
         self.importar_escalacoes(escalacoes_csv)
+        
+        self.importar_outros_jogos(outros_jogos_csv)
 
         subprocess.run([sys.executable, '-m', 'manage', 'runserver'])
 
@@ -140,3 +142,37 @@ class Command(BaseCommand):
                 defaults={'jogador': row['jogador']}
             )
         self.stdout.write(self.style.SUCCESS(f'Dados dos jogadores importados com sucesso!'))
+
+    def importar_outros_jogos(self, arquivo_csv):
+        resposta = requests.get(arquivo_csv)
+        resposta.raise_for_status()  # Verifica se a requisição foi bem-sucedida
+        resposta.encoding = 'utf-8'
+
+        csvfile = StringIO(resposta.text)
+        leitor = csv.DictReader(csvfile)
+
+        for row in leitor:
+            data_str = row['data']
+            try:
+                data_obj = datetime.strptime(data_str, "%d/%m/%Y")
+                data_formatada = data_obj.strftime("%Y-%m-%d")
+            except ValueError:
+                self.stdout.write(self.style.ERROR(f"Erro ao processar a data {data_str}. Formato incorreto."))
+                continue
+
+            # Criação ou atualização do jogo
+            OutrosJogos.objects.update_or_create(
+                id=row['id'],
+                defaults={
+                    'mandante': row['mandante'],
+                    'gols_mandante': row['gols_mandante'], 
+                    'gols_visitante': row['gols_visitante'],
+                    'visitante': row['visitante'],
+                    'estadio': row['estadio'],
+                    'local_estadio': row['local_estadio'],
+                    'data': data_formatada,
+                    'campeonato': row['campeonato']
+                }
+            )
+
+        self.stdout.write(self.style.SUCCESS(f'Dados dos outros jogos importados com sucesso!'))

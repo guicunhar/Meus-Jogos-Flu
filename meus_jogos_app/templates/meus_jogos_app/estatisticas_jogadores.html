@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{% static 'meus_jogos_app/styles_estatisticas.css' %}">
     <nav class="nav1">
         <ul>
-            <li><a href="{% url 'jogos' %}">Jogos</a></li>
+            <li><a href="{% url 'jogos_flu' %}">Jogos</a></li>
         </ul>
         <ul>
             <li><a href="{% url 'estatisticas_dados_gerais' %}">Estatísticas</a></li>
@@ -63,7 +63,17 @@
         </div>
         <div>
                 <div class="section-title">Duplas com mais Gols</div>
-                {{ df_dupla|safe }} <!-- Aqui renderiza outra tabela -->
+                {{ df_dupla|safe }}
+        </div>
+    </div>
+    <div class="table-container">
+        <div>
+                <div class="section-title">Mais Gols por Ano</div>
+                {{ df_art_ano|safe }} 
+        </div>
+        <div>
+                <div class="section-title">Mais Gols contra Adversários</div>
+                {{ df_art_time|safe }}
         </div>
     </div>
     <script src="{% static 'meus_jogos_app/script.js' %}"></script>

@@ -41,3 +41,17 @@ class Escalacao(models.Model):
 
     def __str__(self):
         return f"{self.jogador} - {self.id_jogo}"
+
+class OutrosJogos(models.Model):
+    id = models.AutoField(primary_key=True)
+    mandante = models.CharField(max_length=100)
+    gols_mandante = models.IntegerField()
+    gols_visitante = models.IntegerField()
+    visitante = models.CharField(max_length=100)
+    estadio = models.CharField(max_length=100)
+    local_estadio = models.CharField(max_length=100)
+    data = models.DateField()
+    campeonato = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.mandante} {self.gols_mandante} x {self.gols_visitante} {self.visitante} ({self.data})"

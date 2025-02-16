@@ -88,65 +88,83 @@ header {
     color: white;
 }
 
-/* Container da tabela */
-.table-container {
+/* Estilo do carrossel */
+.carousel {
+    width: 800px;
+    height: 440px;
+    margin: auto;
+    margin-top: 10px;
+    overflow: hidden;
+    position: relative;
+    background-color: #000; /* Fundo preto para destacar as imagens */
+    border-radius: 10px; /* Arredondando as bordas do carrossel */
+}
+
+/* Container das imagens do carrossel */
+.carousel-images {
     display: flex;
-    justify-content: space-around;
-    margin: 20px;
+    transition: transform 0.5s ease-in-out;
 }
 
-/* Estilo das tabelas */
-.table-container div {
-    width: 45%;
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    padding: 10px;
+.carousel-item {
+    background-color: #004d2c;
+    min-width: 100%;
     box-sizing: border-box;
+    position: relative;
 }
 
-table {
+/* Imagens dentro do carrossel */
+.carousel-item img {
     width: 100%;
-    border-collapse: collapse;
+    height: 55%;
+    object-fit: cover;
 }
 
-/* Estilo das células */
-table th, table td {
-    padding: 10px;
-    border: 1px solid white;
-    text-align: center;
-    white-space: break-word;
-}
-
-/* Estilo do cabeçalho */
-table th {
-    background-color: #00613C;
-    color: white;
-}
-
-/* Estilo das linhas alternadas */
-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-/* Efeito hover ao passar o mouse */
-table tr:hover {
-    background-color: #00613c23;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.section-title {
+/* Legenda do carrossel */
+.carousel-caption {
+    color:white;
+    font-size: 2em; /* Tamanho do título */
     font-weight: bold;
-    text-align: center;
-    margin-bottom: 10px;
-    font-size: 18px;
-    color: white;
-    background-color: #00613C;
-    width: 100%;
-    display: block;
+    margin: 1px; /* Espaço entre o título e o subtítulo */
 }
 
-.table-container div {
-    width: 100%;
-    text-align: center;
+.carousel-subtitle {
+    color:white;
+    font-size: 1.2em; /* Tamanho do subtítulo */
+    font-style: italic;
+    margin-left: 5px;
 }
+
+/* Estilo dos botões de navegação */
+.buttons {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+}
+
+.prev, .next {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.prev:hover, .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.prev {
+    margin-left: 10px;
+}
+
+.next {
+    margin-right: 10px;
+}
+

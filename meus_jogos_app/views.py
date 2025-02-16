@@ -1,8 +1,7 @@
 import pandas as pd
 from django.shortcuts import render
-from .models import Jogo, Gol, Escalacao
+from .models import Jogo, Gol, Escalacao, OutrosJogos
 from collections import Counter
-from datetime import datetime
 
 def lista_jogos(request):
     jogos = Jogo.objects.all()
@@ -31,7 +30,30 @@ def lista_jogos(request):
     df_jogos.columns = ["ID", "","Placar","Adversário","Estádio","Data","Campeonato","Árbritro","Público","Gols"]
 
     context = {'df_jogos': df_jogos.to_html(  index=False)}
-    return render(request, 'meus_jogos_app/jogos.html', context)
+    return render(request, 'meus_jogos_app/jogos_flu.html', context)
+
+def lista_outros_jogos(request):
+    jogos = OutrosJogos.objects.all()
+    
+    data = {
+        "id": [jogo.id for jogo in jogos],
+        "mandante": [jogo.mandante for jogo in jogos],
+        "placar": [f"{jogo.gols_mandante} x {jogo.gols_visitante}" for jogo in jogos],
+        "visitante": [jogo.visitante for jogo in jogos],
+        "estadio": [f"{jogo.estadio} ({jogo.local_estadio})" for jogo in jogos],
+        "data": [jogo.data.strftime("%d/%m/%Y") for jogo in jogos],
+        "campeonato": [jogo.campeonato for jogo in jogos],
+    }
+
+    df_outros_jogos = pd.DataFrame(data)
+    df_outros_jogos.columns = ["ID", "Mandante","Placar","Visitante","Estádio","Data","Campeonato"]
+
+    context = {'df_outros_jogos': df_outros_jogos.to_html(index=False)}
+    return render(request, 'meus_jogos_app/outros_jogos.html', context)
+
+def jogos_importantes(request):
+    context = {}
+    return render(request, 'meus_jogos_app/jogos_importantes.html', context)
 
 def estatisticas_jogadores(request):
     gols = Gol.objects.all()
@@ -39,6 +61,31 @@ def estatisticas_jogadores(request):
     data_gols = {
         "autor_gol": [gol.autor_gol for gol in gols],
         "assistencia": [gol.assistencia for gol in gols],
+    }
+
+    jogos = Jogo.objects.all()
+
+    data_jogos = {
+        "id": [jogo.id for jogo in jogos],
+        "fluminense": "Fluminense",
+        "gols_flu": [jogo.gols_flu for jogo in jogos],
+        "gols_adv": [jogo.gols_adv for jogo in jogos],
+        "placar": [f"{jogo.gols_flu} x {jogo.gols_adv}" for jogo in jogos],
+        "adversario": [f"{jogo.adversario} ({jogo.local_adv})" for jogo in jogos],
+        "estadio": [f"{jogo.estadio} ({jogo.local_estadio})" for jogo in jogos],
+        "local_estadio": [jogo.local_estadio for jogo in jogos],
+        "data": [jogo.data.strftime("%d/%m/%Y") for jogo in jogos],
+        "ano": [jogo.data.strftime("%Y") for jogo in jogos],
+        "campeonato": [jogo.campeonato for jogo in jogos],
+        "arbitro": [jogo.arbitro for jogo in jogos],
+        "publico": [jogo.publico for jogo in jogos],
+        "gols": [
+        ', '.join([
+            f"{gol} ({count})" if count > 1 else gol
+            for gol, count in Counter([gol.autor_gol for gol in jogo.gols.all()]).items()
+        ])
+        for jogo in jogos
+    ]
     }
 
     escalacoes_jog = Escalacao.objects.exclude(jogador__icontains="TEC")
@@ -99,13 +146,34 @@ def estatisticas_jogadores(request):
     df_mais_tec.columns = ["Técnico", "Jogos"]
     df_mais_tec.index = range(1, len(df_mais_tec) + 1)
 
+    df_art_ano_jogos = pd.DataFrame(data_jogos)
+
+    df_art_ano_gols = pd.DataFrame({
+        "id_jogo": [gol.id_jogo.id for gol in Gol.objects.all()],
+        "autor_gol": [gol.id_autor.jogador for gol in Gol.objects.all()],
+    })
+
+    df_art_ano = df_art_ano_jogos.merge(df_art_ano_gols, left_on='id', right_on='id_jogo')
+    df_art_ano['ano'] = df_art_ano['data'].apply(lambda x: x.split('/')[-1])
+    df_art_ano = df_art_ano.groupby(['ano', 'autor_gol']).size().reset_index(name='gols')
+    df_art_ano = df_art_ano.sort_values(by=['gols'], ascending=[False])
+    df_art_ano.columns = ["Ano", "Jogador", "Gols"]
+    df_art_ano.index = range(1, len(df_art_ano) + 1)
+
+    df_art_time = df_art_ano_jogos.merge(df_art_ano_gols, left_on='id', right_on='id_jogo')
+    df_art_time = df_art_time.groupby(['adversario', 'autor_gol']).size().reset_index(name='gols')
+    df_art_time = df_art_time.sort_values(by=['gols'], ascending=[False])
+    df_art_time.columns = ["Adversário", "Jogador", "Gols"]
+    df_art_time.index = range(1, len(df_art_time) + 1)
 
     context = {'df_gols': df_gols.to_html(index=True),
                'df_assists': df_assists.to_html(index=True),
                'df_part': df_part.to_html(index=True),
                'df_dupla': df_dupla.to_html(index=True),
                'df_mais_jogos': df_mais_jogos.to_html(index=True),
-               'df_mais_tec': df_mais_tec.to_html(index=True)}
+               'df_mais_tec': df_mais_tec.to_html(index=True),
+               'df_art_ano': df_art_ano.to_html(index=True),
+               'df_art_time': df_art_time.to_html(index=True)}
 
     return render(request, 'meus_jogos_app/estatisticas_jogadores.html', context)
 

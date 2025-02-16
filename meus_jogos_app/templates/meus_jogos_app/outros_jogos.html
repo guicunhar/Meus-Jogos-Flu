@@ -9,10 +9,10 @@
     <meta name="robots" content="index, follow">
     <title>Lista de Jogos</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'meus_jogos_app/styles_jogos.css' %}">
-    <nav>
+    <link rel="stylesheet" href="{% static 'meus_jogos_app/styles_estatisticas.css' %}">
+    <nav class="nav1">
         <ul>
-            <li><a href="{% url 'jogos' %}">Jogos</a></li>
+            <li><a href="{% url 'jogos_flu' %}">Jogos</a></li>
         </ul>
         <ul>
             <li><a href="{% url 'estatisticas_dados_gerais' %}">Estatísticas</a></li>
@@ -23,11 +23,20 @@
     <header>
         <h1>Lista de Jogos</h1>
     </header>
-    <main>
-    <div class="table-container">
-        {{ df_jogos|safe }}
+    <nav class="nav2">
+        <ul>
+            <li><a href="{% url 'jogos_flu' %}">Fluminense</a></li>
+        </ul>
+        <ul>
+            <li><a href="{% url 'outros_jogos' %}">Outros Jogos</a></li>
+        </ul>
+        <ul>
+            <li><a href="{% url 'jogos_importantes' %}">Jogos Importantes</a></li>
+        </ul>
+    </nav>
+    <div class = "table-container">
+        {{ df_outros_jogos|safe }}
     </div>
-    </main>
     <script src="{% static 'meus_jogos_app/script.js' %}"></script>
 </body>
 </html>
