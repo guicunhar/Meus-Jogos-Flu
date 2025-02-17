@@ -99,6 +99,7 @@ class Command(BaseCommand):
             assistente = Jogador.objects.get(id_jogador=row['id_ass']) if row['id_ass'] else None
 
             Gol.objects.update_or_create(
+                id_gol=row['id_gol'],
                 id_jogo=jogo,
                 id_autor=autor,
                 id_ass=assistente,

@@ -24,6 +24,7 @@ class Jogador(models.Model):
         return self.jogador
 
 class Gol(models.Model):
+    id_gol = models.IntegerField(primary_key=True)
     id_jogo = models.ForeignKey(Jogo, on_delete=models.CASCADE, related_name="gols")
     id_autor = models.ForeignKey(Jogador, on_delete=models.CASCADE, related_name="autor_gol")
     autor_gol = models.CharField(max_length=100)    

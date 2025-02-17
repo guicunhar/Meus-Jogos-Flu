@@ -17,12 +17,13 @@ def lista_jogos(request):
         "arbitro": [jogo.arbitro for jogo in jogos],
         "publico": [jogo.publico for jogo in jogos],
         "gols": [
-        ', '.join([
-            f"{gol} ({count})" if count > 1 else gol
-            for gol, count in Counter([gol.autor_gol for gol in jogo.gols.all()]).items()
-        ])
-        for jogo in jogos
-    ]
+            ', '.join([
+                f"{autor} ({count})" if count > 1 else autor
+                for autor, count in Counter([gol.autor_gol.strip() for gol in jogo.gols.all()]).items()
+            ])
+            for jogo in jogos
+        ]
+
     }
 
     df_jogos = pd.DataFrame(data)
