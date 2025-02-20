@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lista de Jogos do Fluminense com detalhes sobre placar, adversário, estádio e mais.">
+    <meta name="author" content="Guilherme Cunha">
+    <meta name="robots" content="index, follow">
+    <title>Lista de Jogos</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'meus_jogos_app/styles_jogos_importantes.css' %}">
+    <nav class="nav1">
+        <ul>
+            <li><a href="{% url 'jogos_flu' %}">Jogos</a></li>
+        </ul>
+        <ul>
+            <li><a href="{% url 'estatisticas_dados_gerais' %}">Estatísticas</a></li>
+        </ul>
+        <ul>
+            <li><a href="{% url 'jogos_importantes' %}">Hall da Fama</a></li>
+        </ul>
+    </nav>
+</head>
+<body>
+    <header>
+        <h1>Lista de Jogos</h1>
+    </header>
+    <nav class="nav2">
+        <ul>
+            <li><a href="{% url 'jogos_importantes' %}">Jogos Importantes</a></li>
+        </ul>
+        <ul>
+            <li><a href="{% url 'jogadores_importantes' %}">Craques da Bola</a></li>
+        </ul>
+    </nav>
+    <div class="carousel">
+        <div class="carousel-images">
+            <div class="carousel-item">
+                <img src="https://f.i.uol.com.br/fotografia/2019/07/06/15624559885d212fb4331f4_1562455988_3x2_md.jpg" alt="Imagem 1">
+                <div class="carousel-caption">Lionel Messi</div>
+                <div class="carousel-subtitle">Argentina 2x0 Venezuela - 28/06/2019 - Copa América - Maracanã (RJ)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://www.cnnbrasil.com.br/wp-content/uploads/sites/12/2023/12/suarez-gremio-artilharia-campeonato-brasileiro-gols-e1701879381117.jpg" alt="Imagem 2">
+                <div class="carousel-caption">Luis Suárez</div>
+                <div class="carousel-subtitle">Fluminense 2x3 Grêmio - 06/12/2023 - Campeonato Brasileiro -  Maracanã (RJ)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://s2-ge.glbimg.com/n1h4RrNZlm4F202-D1GU5e2lOJM=/0x0:2047x1365/1008x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2022/e/b/PaMhYnRRSqB43wYKYD0A/51959337268-3e90350dfb-k.jpg" alt="Imagem 7">
+                <div class="carousel-caption">Neymar</div>
+                <div class="carousel-subtitle">Brasil 4x0 Chile - 24/03/2022 - Eliminatórias da Copa - Maracanã (RJ)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://lncimg.lance.com.br/cdn-cgi/image/width=828,quality=75,fit=pad,format=webp/uploads/2019/06/28/5d167beedaae8.jpeg" alt="Imagem 7">
+                <div class="carousel-caption">Sergio Agüero</div>
+                <div class="carousel-subtitle">Argentina 2x0 Venezuela - 28/06/2019 - Copa América - Maracanã (RJ)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://assets.goal.com/images/v3/blt7a95ea29b20633e6/GOAL%20-%20Blank%20WEB%20-%20Facebook%20-%202024-06-09T200229.033.png?auto=webp&format=pjpg&width=3840&quality=60" alt="Imagem 7">
+                <div class="carousel-caption">Di María</div>
+                <div class="carousel-subtitle">Argentina 2x0 Venezuela - 28/06/2019 - Copa América - Maracanã (RJ)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://conteudo.imguol.com.br/c/esporte/49/2019/06/23/lautaro-martinez-comemora-o-gol-anotado-pela-argentina-contra-o-qatar-1561318857619_v2_900x506.jpg" alt="Imagem 7">
+                <div class="carousel-caption">Lautauro Martínez</div>
+                <div class="carousel-subtitle">Argentina 2x0 Venezuela 28/06/2019 - Copa América - Maracanã (RJ)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://s2-ge.glbimg.com/xNdS1pgLd3zbvZwJEL6OvDNwVAo=/1200x/smart/filters:cover():strip_icc()/s.glbimg.com/es/ge/f/original/2019/06/23/20190623_catar_x_argentina_121.jpg" alt="Imagem 7">
+                <div class="carousel-caption">Paulo Dybala</div>
+                <div class="carousel-subtitle">Argentina 2x0 Venezuela 28/06/2019 - Copa América - Maracanã (RJ)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://www.gaveanews.com/wp-content/uploads/Thiago-Silva-com-a-camisa-do-Fluminense-em-Fluminense-x-Palmeiras-pelo-Brasileirao-2024-1280x720.jpg" alt="Imagem 3">
+                <div class="carousel-caption">Thiago Silva</div>
+                <div class="carousel-subtitle">18 jogos pelo Fluminense (+1 pelo Brasil)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://lncimg.lance.com.br/uploads/2024/11/Marcelo-Fluminense-scaled-aspect-ratio-512-320.jpg" alt="Imagem 4">
+                <div class="carousel-caption">Marcelo</div>
+                <div class="carousel-subtitle">44 jogos</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://conteudo.imguol.com.br/c/esporte/d9/2022/03/24/vini-jr-durante-brasil-x-chile-pelas-eliminatorias-1648172923877_v2_4x3.jpg" alt="Imagem 7">
+                <div class="carousel-caption">Vinicius Junior</div>
+                <div class="carousel-subtitle">Brasil 4x0 Chile - 24/03/2022 - Eliminatórias da Copa - Maracanã (RJ)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://conteudo.imguol.com.br/c/esporte/ab/2023/11/16/alisson-goleiro-do-brasil-no-aquecimento-para-o-jogo-contra-a-colombia-pelas-eliminatorias-sul-americanas-1700178579263_v2_4x3.jpg" alt="Imagem 7">
+                <div class="carousel-caption">Alisson</div>
+                <div class="carousel-subtitle">Brasil 4x0 Chile - 24/03/2022 - Eliminatórias da Copa - Maracanã (RJ)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://static.gazetaesportiva.com/uploads/imagem/2022/06/29/gazeta-press-foto-582351.jpg" alt="Imagem 5">
+                <div class="carousel-caption">Rogério Ceni</div>
+                <div class="carousel-subtitle">São Paulo 2x1 Fluminense - 25/08/2013 - Campeonato Brasileiro - Morumbi (SP)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://s2.glbimg.com/5I1Ur0HClxA4IgjuKpPIMp5KFIY=/12x91:3364x2480/690x492/s.glbimg.com/es/ge/f/original/2015/09/24/a51.jpg" alt="Imagem 7">
+                <div class="carousel-caption">Ronaldinho Gaúcho</div>
+                <div class="carousel-subtitle">Ponte Preta 3x1 Fluminense - 19/09/2015 - Campeonato Brasileiro - Moisés Lucarelli (SP)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://s3.amazonaws.com/assets-fluminense/posts/6811/WhatsApp_Image_2021-06-22_at_17.15.50_banner.jpg?1624395338" alt="Imagem 7">
+                <div class="carousel-caption">Romário</div>
+                <div class="carousel-subtitle">Fluminense 1x1 Guarani - 12/06/2004 - Campeonato Brasileiro - Raulino de Oliveira (RJ)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://imagens.ebc.com.br/QTrM02_i-em5AfrIjjoOo4TK00A=/1170x700/smart/https://agenciabrasil.ebc.com.br/sites/default/files/thumbnails/image/fred_fluminense.jpg?itok=3xMD01ca" alt="Imagem 6">
+                <div class="carousel-caption">Fred</div>
+                <div class="carousel-subtitle">34 jogos</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://agenciaesporte.com.br/wp-content/uploads/2023/12/Fabio-Fluminense.jpg" alt="Imagem 7">
+                <div class="carousel-caption">Fábio</div>
+                <div class="carousel-subtitle">101 jogos</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://agenciaesporte.com.br/wp-content/uploads/2023/02/fluminense-cano.jpg" alt="Imagem 7">
+                <div class="carousel-caption">Germán Cano</div>
+                <div class="carousel-subtitle">99 jogos</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://lncimg.lance.com.br/uploads/2021/09/03/6132642a6f78d.jpeg" alt="Imagem 7">
+                <div class="carousel-caption">Jhon Arias</div>
+                <div class="carousel-subtitle">103 jogos</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://s2-ge.glbimg.com/74JSyF2CYACwdmu3pOIEeK5vtK8=/0x0:2048x1366/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2024/A/L/e21LwvTHmZB3P1pTo9xA/54074873218-7bc70b8aba-k.jpg" alt="Imagem 7">
+                <div class="carousel-caption">PH Ganso</div>
+                <div class="carousel-subtitle">119 jogos pelo Fluminense (+1 pelo São Paulo)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://180graus.com/180graus/media/image_bank/2023/5/ex-fluminense-conca-quer-comprar-clube-tradicional-do-rio-d_-5030232277705954720.jpeg.1200x0_q85_crop.jpg" alt="Imagem 7">
+                <div class="carousel-caption">Dario Conca</div>
+                <div class="carousel-subtitle">10 jogos</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://lncimg.lance.com.br/cdn-cgi/image/width=828,quality=75,fit=pad,format=webp/uploads/2020/02/29/5e5ad0bf618c9.jpeg" alt="Imagem 7">
+                <div class="carousel-caption">Deco</div>
+                <div class="carousel-subtitle">3 jogos</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://e.radio-grpp.io/xlarge/2022/11/17/594559_1346668.jpg" alt="Imagem 7">
+                <div class="carousel-caption">Claudio Bravo</div>
+                <div class="carousel-subtitle">Brasil 4x0 Chile - 24/03/2022 - Eliminatórias da Copa - Maracanã (RJ)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://static.wikia.nocookie.net/futebol/images/7/7f/Alexis_S%C3%A1nchez_Chile_2022.webp/revision/latest?cb=20240705133134" alt="Imagem 7">
+                <div class="carousel-caption">Alexis Sanchez</div>
+                <div class="carousel-subtitle">Brasil 4x0 Chile - 24/03/2022 - Eliminatórias da Copa - Maracanã (RJ)</div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://www.rbsdirect.com.br/imagesrc/25666812.jpg?w=700" alt="Imagem 7">
+                <div class="carousel-caption">Diego Forlán</div>
+                <div class="carousel-subtitle">Fluminense 2x3 Internacional - 13/07/2013 - Campeonato Brasileiro - Moacyrzão (RJ)</div>
+            </div>
+        </div>
+        <div class="buttons">
+            <button class="prev" onclick="moveSlide(-1)">❮</button>
+            <button class="next" onclick="moveSlide(1)">❯</button>
+        </div>
+    </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const prevButton = document.querySelector('.prev');
+    const nextButton = document.querySelector('.next');
+    const carouselImages = document.querySelector('.carousel-images');
+    const carouselItems = document.querySelectorAll('.carousel-item');
+    let currentIndex = 0;
+
+    // Função para atualizar o carrossel
+    function updateCarousel() {
+        const totalItems = carouselItems.length;
+        if (currentIndex >= totalItems) {
+            currentIndex = 0;
+        } else if (currentIndex < 0) {
+            currentIndex = totalItems - 1;
+        }
+
+        // Atualiza a posição do carrossel para a imagem atual
+        carouselImages.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
+
+    // Evento de clique no botão "próximo"
+    nextButton.addEventListener('click', function() {
+        currentIndex++;
+        updateCarousel();
+    });
+
+    // Evento de clique no botão "anterior"
+    prevButton.addEventListener('click', function() {
+        currentIndex--;
+        updateCarousel();
+    });
+
+    // Atualiza o carrossel ao carregar a página
+    updateCarousel();
+});
+
+    </script>
+</body>
+</html>

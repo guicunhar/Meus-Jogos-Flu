@@ -126,6 +126,7 @@ header {
     font-size: 2em; /* Tamanho do título */
     font-weight: bold;
     margin: 1px; /* Espaço entre o título e o subtítulo */
+    margin-left: 5px;
 }
 
 .carousel-subtitle {

@@ -29,8 +29,9 @@ def lista_jogos(request):
     df_jogos = pd.DataFrame(data)
     df_jogos['publico'] = df_jogos['publico'].apply(lambda x: f"{x:,}".replace(",","."))
     df_jogos.columns = ["ID", "","Placar","Adversário","Estádio","Data","Campeonato","Árbritro","Público","Gols"]
+    df_jogos= df_jogos.sort_values(by="ID", ascending=False)    
 
-    context = {'df_jogos': df_jogos.to_html(  index=False)}
+    context = {'df_jogos': df_jogos.to_html(index=False)}
     return render(request, 'meus_jogos_app/jogos_flu.html', context)
 
 def lista_outros_jogos(request):
@@ -48,6 +49,7 @@ def lista_outros_jogos(request):
 
     df_outros_jogos = pd.DataFrame(data)
     df_outros_jogos.columns = ["ID", "Mandante","Placar","Visitante","Estádio","Data","Campeonato"]
+    df_outros_jogos= df_outros_jogos.sort_values(by="ID", ascending=False)
 
     context = {'df_outros_jogos': df_outros_jogos.to_html(index=False)}
     return render(request, 'meus_jogos_app/outros_jogos.html', context)
@@ -55,6 +57,10 @@ def lista_outros_jogos(request):
 def jogos_importantes(request):
     context = {}
     return render(request, 'meus_jogos_app/jogos_importantes.html', context)
+
+def jogadores_importantes(request):
+    context = {}
+    return render(request, 'meus_jogos_app/jogadores_importantes.html', context)
 
 def estatisticas_jogadores(request):
     gols = Gol.objects.all()
@@ -139,7 +145,7 @@ def estatisticas_jogadores(request):
 
     df_mais_jogos =  pd.DataFrame(data_escalacao)
     df_mais_jogos = df_mais_jogos["jogador"].value_counts().reset_index()
-    df_mais_jogos.columns = ["Técnico", "Jogos"]
+    df_mais_jogos.columns = ["Jogador", "Jogos"]
     df_mais_jogos.index = range(1, len(df_mais_jogos) + 1)
     
     df_mais_tec =  pd.DataFrame(data_tec)
