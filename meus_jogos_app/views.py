@@ -28,7 +28,7 @@ def lista_jogos(request):
 
     df_jogos = pd.DataFrame(data)
     df_jogos['publico'] = df_jogos['publico'].apply(lambda x: f"{x:,}".replace(",","."))
-    df_jogos.columns = ["ID", "","Placar","Adversário","Estádio","Data","Campeonato","Árbritro","Público","Gols"]
+    df_jogos.columns = ["ID", "","Placar","Adversário","Estádio","Data","Campeonato","Árbitro","Público","Gols"]
     df_jogos= df_jogos.sort_values(by="ID", ascending=False)    
 
     context = {'df_jogos': df_jogos.to_html(index=False)}
@@ -103,7 +103,7 @@ def estatisticas_jogadores(request):
     }
 
     data_tec = {
-        "jogador": [esc.jogador for esc in escalacoes_tec]
+        "jogador": [esc.jogador.replace("TEC", "") for esc in escalacoes_tec]
     }
 
     df_gols = pd.DataFrame(data_gols)
@@ -165,12 +165,14 @@ def estatisticas_jogadores(request):
     df_art_ano = df_art_ano.groupby(['ano', 'autor_gol']).size().reset_index(name='gols')
     df_art_ano = df_art_ano.sort_values(by=['gols'], ascending=[False])
     df_art_ano.columns = ["Ano", "Jogador", "Gols"]
+    df_art_ano = df_art_ano[["Jogador","Ano","Gols"]]
     df_art_ano.index = range(1, len(df_art_ano) + 1)
 
     df_art_time = df_art_ano_jogos.merge(df_art_ano_gols, left_on='id', right_on='id_jogo')
     df_art_time = df_art_time.groupby(['adversario', 'autor_gol']).size().reset_index(name='gols')
     df_art_time = df_art_time.sort_values(by=['gols'], ascending=[False])
     df_art_time.columns = ["Adversário", "Jogador", "Gols"]
+    df_art_time = df_art_time[["Jogador","Adversário","Gols"]]
     df_art_time.index = range(1, len(df_art_time) + 1)
 
     context = {'df_gols': df_gols.to_html(index=True),
@@ -322,25 +324,25 @@ def estatisticas_adv(request):
     df_adversarios = pd.DataFrame(data_jogos)
     df_adversarios = df_adversarios[["adversario", "resultado"]]
     df_adversarios = df_adversarios.groupby("adversario")["resultado"].value_counts().unstack(fill_value=0)
-    df_adversarios["Total"] = df_adversarios.sum(axis=1)
-    df_adversarios["Aprov. %"] = round((3*df_adversarios["V"] + df_adversarios["E"]) / (3*df_adversarios["Total"])*100,2)
+    df_adversarios["Jogos"] = df_adversarios.sum(axis=1)
+    df_adversarios["Aprov. %"] = round((3*df_adversarios["V"] + df_adversarios["E"]) / (3*df_adversarios["Jogos"])*100,2)
     df_adversarios = df_adversarios.reset_index()
     df_adversarios.columns.name = None
-    df_adversarios = df_adversarios[["adversario", "Total", "V", "E", "D", "Aprov. %"]]
+    df_adversarios = df_adversarios[["adversario", "Jogos", "V", "E", "D", "Aprov. %"]]
     df_adversarios = df_adversarios.rename(columns={"adversario": "Adversário"})
-    df_adversarios = df_adversarios.sort_values(by="Total", ascending=False)
+    df_adversarios = df_adversarios.sort_values(by="Jogos", ascending=False)
     df_adversarios.index = range(1, len(df_adversarios) + 1)
 
     df_local_adv = pd.DataFrame(data_jogos)
     df_local_adv = df_local_adv[["local_adv", "resultado"]]
     df_local_adv = df_local_adv.groupby("local_adv")["resultado"].value_counts().unstack(fill_value=0)
-    df_local_adv["Total"] = df_local_adv.sum(axis=1)
-    df_local_adv["Aprov. %"] = round((3*df_local_adv["V"] + df_local_adv["E"]) / (3*df_local_adv["Total"])*100,2)
+    df_local_adv["Jogos"] = df_local_adv.sum(axis=1)
+    df_local_adv["Aprov. %"] = round((3*df_local_adv["V"] + df_local_adv["E"]) / (3*df_local_adv["Jogos"])*100,2)
     df_local_adv = df_local_adv.reset_index()
     df_local_adv.columns.name = None
-    df_local_adv = df_local_adv[["local_adv", "Total", "V", "E", "D", "Aprov. %"]]
+    df_local_adv = df_local_adv[["local_adv", "Jogos", "V", "E", "D", "Aprov. %"]]
     df_local_adv = df_local_adv.rename(columns={"local_adv": "Local do Adv."})
-    df_local_adv = df_local_adv.sort_values(by="Total", ascending=False)
+    df_local_adv = df_local_adv.sort_values(by="Jogos", ascending=False)
     df_local_adv.index = range(1, len(df_local_adv) + 1)
 
     context = {'df_adversarios': df_adversarios.to_html(index=True),

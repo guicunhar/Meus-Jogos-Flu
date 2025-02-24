@@ -1,5 +1,5 @@
 body{
-    background-color: hite;
+    background-color: #870A28;
 }
 
 .custom-header {
@@ -9,15 +9,15 @@ body{
 }
 
 .nav-link.active{
-    color: #870A28 !important;         
-    background-color: white !important; 
+    color: #870A28 !important;          /* Cor do link não ativo */
+    background-color: white !important; /* Fundo do link não ativo */
     margin-left: 5px;
 }
 
 .nav-link{
-    color: white !important;           
+    color: white !important;            /* Cor do texto do link ativo */
     border-color: white !important;
-    background-color: #870A28 !important;
+    background-color: #870A28 !important;/* Fundo do link ativo */
     margin-left: 5px;
 }
 
@@ -42,9 +42,7 @@ body{
     color: white !important;
 }
 
-.nav, .nav-item{
-    border: none !important; 
-}
+
 
 .table-container {
     background-color: white;
@@ -69,6 +67,7 @@ table {
     height: 100px;
     margin: 0 auto;
     width: 100%;
+    border: 2px solid white;
 }
 
 table th, table td {
@@ -78,11 +77,9 @@ table th, table td {
     white-space: break-word;
 }
 
-.table-container .table-row:nth-child(n+2) table td:first-child,
-.table-container .table-row:nth-child(n+2) table th:first-child {
-    width: 80px; /* Ajuste o valor conforme necessário */
+table td:first-child, table th:first-child {
+    width: 80px; 
 }
-
 
 table th {
     background-color: #004d2c;
@@ -111,5 +108,10 @@ table tr:hover {
     background-color: #004d2c;
     text-align: center;
 }
+
+.nav, .nav-item{
+    border: none !important; 
+}
+
 
 

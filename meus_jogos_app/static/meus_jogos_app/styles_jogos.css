@@ -1,152 +1,90 @@
-/* Estilo geral para a página */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    margin: 0;
-    padding: 0;
-}
-
-/* Cabeçalho da página */
-header {
-    background-color: #870A28;
-    color: white;
-    padding: 20px;
-    text-align: center;
-}
-
-/* Navegação nav1 */
-.nav1 {
-    background-color: #004d2c;
-    padding: 10px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-.nav1 ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    gap: 15px;
-}
-
-.nav1 ul li {
-    margin: 0;
-}
-
-.nav1 ul li a {
-    color: #00613C;
-    text-decoration: none;
-    font-size: 16px;
-    padding: 10px 15px;
-    background-color: white;
-    border-radius: 8px;
-    display: inline-block;
-    transition: background 0.3s;
-}
-
-.nav1 ul li a:hover {
-    background-color: #00613C;
-    color: white;
-}
-
-/* Navegação nav2 */
-.nav2 {
-    background-color: #004d2c;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-.nav2 ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    gap: 15px;
-}
-
-.nav2 ul li {
-    margin: 0;
-}
-
-.nav2 ul li a {
-    color: #FFFF;
-    text-decoration: none;
-    font-size: 14px;
-    padding: 10px 15px;
-    background-color: #00613C;
-    border-radius: 8px;
-    display: inline-block;
-    transition: background 0.3s;
-}
-
-.nav2 ul li a:hover {
-    background-color: #870A28;
-    color: white;
-}
-
-/* Container da tabela */
 .table-container {
     display: flex;
     justify-content: space-around;
-    margin: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
-/* Estilo das tabelas */
 .table-container div {
-    width: 45%;
-    max-height: 300px;
     overflow-y: auto;
-    border: 1px solid #ddd;
     padding: 10px;
     box-sizing: border-box;
 }
 
 table {
     width: 100%;
-    border-collapse: collapse;
+    border: 10px solid white;
 }
 
-/* Estilo das células */
 table th, table td {
     padding: 10px;
-    border: 1px solid white;
+    border: 1px solid black;
     text-align: center;
     white-space: break-word;
 }
 
-/* Estilo do cabeçalho */
 table th {
-    background-color: #00613C;
+    background-color: #004d2c;
     color: white;
 }
 
-/* Estilo das linhas alternadas */
-table tr:nth-child(even) {
-    background-color: #f2f2f2;
+table tr {
+    background-color: white; 
 }
 
-/* Efeito hover ao passar o mouse */
 table tr:hover {
-    background-color: #00613c23;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.section-title {
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 10px;
-    font-size: 18px;
-    color: white;
-    background-color: #00613C;
-    width: 100%;
-    display: block;
+    background-color: #9fcd94;
 }
 
 .table-container div {
     width: 100%;
     text-align: center;
+}
+
+body{
+    background-color: #870A28;
+}
+
+.custom-header {
+    background-color: #870A28;
+    margin-top: 0px;
+    margin-bottom: -5px;
+}
+
+.nav-link.active{
+    color: #870A28 !important;          /* Cor do link não ativo */
+    background-color: white !important; /* Fundo do link não ativo */
+    margin-left: 5px;
+}
+
+.nav-link{
+    color: white !important;            /* Cor do texto do link ativo */
+    border-color: white !important;
+    background-color: #870A28 !important;/* Fundo do link ativo */
+    margin-left: 5px;
+}
+
+.custom-nav {
+    height: 71px;
+    border: none !important; 
+    background-color: #004d2c;
+}
+
+.custom-nav .nav-item{
+    border: none !important; 
+    margin-top: 30px;
+}
+
+.custom-nav .nav-link{
+    border-bottom: none !important;
+    background-color: #004d2c !important;
+}
+
+.custom-nav .nav-link.active{
+    background-color: #870A28 !important;
+    color: white !important;
+}
+
+.nav, .nav-item{
+    border: none !important; 
 }

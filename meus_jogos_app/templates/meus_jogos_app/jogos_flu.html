@@ -6,38 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Lista de Jogos do Fluminense com detalhes sobre placar, adversário, estádio e mais.">
     <meta name="author" content="Guilherme Cunha">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <meta name="robots" content="index, follow">
     <title>Lista de Jogos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     {% load static %}
     <link rel="stylesheet" href="{% static 'meus_jogos_app/styles_jogos.css' %}">
-    <nav class="nav1">
-        <ul>
-            <li><a href="{% url 'jogos_flu' %}">Jogos</a></li>
-        </ul>
-        <ul>
-            <li><a href="{% url 'estatisticas_dados_gerais' %}">Estatísticas</a></li>
-        </ul>
-        <ul>
-            <li><a href="{% url 'jogos_importantes' %}">Hall da Fama</a></li>
-        </ul>
-    </nav>
 </head>
+
 <body>
-    <header>
-        <h1>Lista de Jogos</h1>
-    </header>
-    <nav class="nav2">
-        <ul>
-            <li><a href="{% url 'jogos_flu' %}">Fluminense</a></li>
-        </ul>
-        <ul>
-            <li><a href="{% url 'outros_jogos' %}">Outros Jogos</a></li>
-        </ul>
+    <nav class="nav nav-tabs custom-nav justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'jogos_flu' %}">Jogos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="{% url 'estatisticas_dados_gerais' %}">Estatísticas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " aria-current="page" href="{% url 'jogos_importantes' %}">Museu</a>
+        </li>
     </nav>
-    <div class = "table-container">
-        {{ df_jogos|safe }}
-    </div>
+    <header class="custom-header text-white py-3">
+        <div class="container text-center">
+            <h1 class="h1">Lista de Jogos</h1>
+        </div>
+    </header>
+    <ul class="nav nav-tabs justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'jogos_flu' %}">Fluminense</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'outros_jogos' %}">Outros Jogos</a>
+        </li>
+        <div class = "table-container">
+            {{ df_jogos|safe }}
+        </div>
+      </ul>
     <script src="{% static 'meus_jogos_app/script.js' %}"></script>
 </body>
 </html>
