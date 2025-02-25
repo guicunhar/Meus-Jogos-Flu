@@ -1,7 +1,8 @@
 import pandas as pd
 from django.shortcuts import render
-from .models import Jogo, Gol, Escalacao, OutrosJogos
+from .models import Jogo, Gol, Escalacao, OutrosJogos, Jogador
 from collections import Counter
+from django.db.models import Q
 
 def lista_jogos(request):
     jogos = Jogo.objects.all()
@@ -29,6 +30,7 @@ def lista_jogos(request):
     df_jogos = pd.DataFrame(data)
     df_jogos['publico'] = df_jogos['publico'].apply(lambda x: f"{x:,}".replace(",","."))
     df_jogos.columns = ["ID", "","Placar","Adversário","Estádio","Data","Campeonato","Árbitro","Público","Gols"]
+    df_jogos = df_jogos[["ID", "","Placar","Adversário","Estádio","Data","Campeonato","Público","Gols"]]
     df_jogos= df_jogos.sort_values(by="ID", ascending=False)    
 
     context = {'df_jogos': df_jogos.to_html(index=False)}
@@ -53,14 +55,6 @@ def lista_outros_jogos(request):
 
     context = {'df_outros_jogos': df_outros_jogos.to_html(index=False)}
     return render(request, 'meus_jogos_app/outros_jogos.html', context)
-
-def jogos_importantes(request):
-    context = {}
-    return render(request, 'meus_jogos_app/jogos_importantes.html', context)
-
-def jogadores_importantes(request):
-    context = {}
-    return render(request, 'meus_jogos_app/jogadores_importantes.html', context)
 
 def estatisticas_jogadores(request):
     gols = Gol.objects.all()
@@ -345,12 +339,44 @@ def estatisticas_adv(request):
     df_local_adv = df_local_adv.sort_values(by="Jogos", ascending=False)
     df_local_adv.index = range(1, len(df_local_adv) + 1)
 
+    local_map = {
+    'AC': "Acre",
+    'AL': "Alagoas",
+    'AP': "Amapá",
+    'AM': "Amazonas",
+    'BA': "Bahia",
+    'CE': "Ceará",
+    'DF': "Distrito Federal",
+    'ES': "Espírito Santo",
+    'GO': "Goiás",
+    'MA': "Maranhão",
+    'MT': "Mato Grosso",
+    'MS': "Mato Grosso do Sul",
+    'MG': "Minas Gerais",
+    'PA': "Pará",
+    'PB': "Paraíba",
+    'PR': "Paraná",
+    'PE': "Pernambuco",
+    'PI': "Piauí",
+    'RJ': "Rio de Janeiro",
+    'RN': "Rio Grande do Norte",
+    'RS': "Rio Grande do Sul",
+    'RO': "Rondônia",
+    'RR': "Roraima",
+    'SC': "Santa Catarina",
+    'SP': "São Paulo",
+    'SE': "Sergipe",
+    'TO': "Tocantins",
+    'LAS': "América do Sul"
+}
+    df_local_adv["Local do Adv."] = df_local_adv["Local do Adv."].map(local_map)
+    
     context = {'df_adversarios': df_adversarios.to_html(index=True),
                 'df_local_adv': df_local_adv.to_html(index=True),}
 
     return render(request, 'meus_jogos_app/estatisticas_adversarios.html', context)
 
-def estatisticas_datas(request):
+def estatisticas_datas(request):    
     jogos = Jogo.objects.all()
     
     data_jogos = {
@@ -451,3 +477,103 @@ def estatisticas_datas(request):
                'df_dia': df_dia.to_html(index=True),
                'df_dia_semana': df_dia_semana.to_html(index=True)}
     return render(request, 'meus_jogos_app/estatisticas_datas.html', context)
+
+def personalizar(request):
+    jogos = Jogo.objects.all()
+    adversarios = Jogo.objects.values_list('adversario', flat=True).distinct()
+    locais = Jogo.objects.values_list('local_estadio', flat=True).distinct()
+    locais_adv = Jogo.objects.values_list('local_adv', flat=True).distinct()
+    campeonatos = Jogo.objects.values_list('campeonato', flat=True).distinct()
+    autores_gol = Jogador.objects.values_list('jogador', flat=True).distinct()
+    
+    # Filtros adicionais
+    jogadores = Jogador.objects.values_list('jogador', flat=True).distinct()
+    assistentes = Jogador.objects.values_list('jogador', flat=True).distinct()
+    resultados = ['V', 'E', 'D']  # Vitória, Empate, Derrota
+    
+    # Captura os filtros do GET
+    dia = request.GET.get('dia')
+    mes = request.GET.get('mes')
+    ano = request.GET.get('ano')
+    adversario = request.GET.get('adversario')
+    local_estadio = request.GET.get('local_estadio')
+    local_adv = request.GET.get('locais_adv')
+    campeonato = request.GET.get('campeonato')
+    autor_gol = request.GET.get('autor_gol')
+    jogador = request.GET.get('jogador')
+    resultado = request.GET.get('resultado')
+    assistente = request.GET.get('assistente')
+
+    # Filtros de data
+    if dia:
+        jogos = jogos.filter(data__day=dia)
+    if mes:
+        jogos = jogos.filter(data__month=mes)
+    if ano:
+        jogos = jogos.filter(data__year=ano)
+
+    # Filtros de outros parâmetros
+    if adversario:
+        jogos = jogos.filter(adversario__icontains=adversario)
+    if local_estadio:
+        jogos = jogos.filter(local_estadio__icontains=local_estadio)
+    if local_adv:
+        jogos = jogos.filter(local_adv__icontains=local_estadio)
+    if campeonato:
+        jogos = jogos.filter(campeonato__icontains=campeonato)
+    if resultado:
+        jogos = jogos.filter(resultado=resultado)
+
+    # Filtro por autor do gol
+    if autor_gol:
+        jogos = jogos.filter(gols__autor_gol__icontains=autor_gol).distinct()
+
+    # Filtro por jogador específico (que tenha marcado gol ou dado assistência)
+    if jogador:
+        jogos = jogos.filter(
+            Q(gols__autor_gol__icontains=jogador) | Q(gols__id_ass__jogador__icontains=jogador)
+        )
+
+    # Filtro por assistente
+    if assistente:
+        jogos = jogos.filter(gols__id_ass__jogador__icontains=assistente)
+
+    # Criação do DataFrame, incluindo autores dos gols
+    data = []
+    for jogo in jogos:
+        gols_jogo = Gol.objects.filter(id_jogo=jogo).values_list('autor_gol', flat=True)
+        
+        # Verificar se gols_jogo está vazio ou se algum valor é None
+        if gols_jogo:
+            autores = ', '.join([str(gol) if gol is not None else 'Desconhecido' for gol in gols_jogo])
+        else:
+            autores = 'Nenhum gol'
+        
+        data.append({
+            'adversario': jogo.adversario,
+            'local_adv': jogo.local_adv,
+            'data': jogo.data,
+            'local_estadio': jogo.local_estadio,
+            'campeonato': jogo.campeonato,
+            'resultado': jogo.resultado,
+            'publico': jogo.publico,
+            'goleadores': autores
+        })
+
+    df = pd.DataFrame(data)
+    df_html = df.to_html(index=False, classes='table table-striped') if not df.empty else "<p>⚠️ Nenhum jogo encontrado.</p>"
+
+    # Contexto para o template
+    context = {
+        'df_html': df_html,
+        'adversarios': adversarios,
+        'local_estadio': locais,
+        'local_adv': locais_adv,
+        'campeonatos': campeonatos,
+        'autores_gol': autores_gol,
+        'jogadores': jogadores,
+        'assistentes': assistentes,
+        'resultados': resultados,
+    }
+    
+    return render(request, 'meus_jogos_app/personalizar.html', context)

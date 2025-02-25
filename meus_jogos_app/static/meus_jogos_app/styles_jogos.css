@@ -12,6 +12,7 @@
 }
 
 table {
+    font-size: 20px;
     width: 100%;
     border: 10px solid white;
 }
@@ -58,6 +59,7 @@ body{
 }
 
 .nav-link{
+    font-size: 18px;
     color: white !important;            /* Cor do texto do link ativo */
     border-color: white !important;
     background-color: #870A28 !important;/* Fundo do link ativo */
