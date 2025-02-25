@@ -34,7 +34,7 @@ def lista_jogos(request):
     df_jogos= df_jogos.sort_values(by="ID", ascending=False)    
 
     context = {'df_jogos': df_jogos.to_html(index=False)}
-    return render(request, 'meus_jogos_app/jogos_flu.html', context)
+    return render(request, 'meus_jogos_app/index.html', context)
 
 def lista_outros_jogos(request):
     jogos = OutrosJogos.objects.all()
