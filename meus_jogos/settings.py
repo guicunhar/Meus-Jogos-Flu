@@ -1,7 +1,6 @@
 
 from pathlib import Path
 import os
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,7 +14,7 @@ SECRET_KEY = 'django-insecure-1u$x*a+k3lh=av5m(kj95em&c=@mt(6k@(3g9^e&upl(udalue
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['meus-jogos-flu.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -66,11 +65,11 @@ WSGI_APPLICATION = 'meus_jogos.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f'sqlite:///{os.path.join(BASE_DIR, "db.sqlite3")}'
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
-
 
 
 # Password validation

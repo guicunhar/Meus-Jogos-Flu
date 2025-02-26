@@ -114,10 +114,7 @@ table tr:hover {
     border: none !important; 
 }
 
-.form-check-label {
-    width: 10px;
-    text-align: left; /* Alinha o texto à esquerda */
-    font-size: 16px;  /* Tamanho da fonte do texto */
+.tagify .tagify__dropdown {
+    max-height: 150px;  /* Define a altura máxima da lista de sugestões */
+    overflow-y: auto;   /* Ativa o scroll vertical se necessário */
 }
-
-

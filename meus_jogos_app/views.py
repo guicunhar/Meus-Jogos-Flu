@@ -34,7 +34,7 @@ def lista_jogos(request):
     df_jogos= df_jogos.sort_values(by="ID", ascending=False)    
 
     context = {'df_jogos': df_jogos.to_html(index=False)}
-    return render(request, 'meus_jogos_app/index.html', context)
+    return render(request, 'meus_jogos_app/jogos_flu.html', context)
 
 def lista_outros_jogos(request):
     jogos = OutrosJogos.objects.all()
@@ -481,14 +481,22 @@ def estatisticas_datas(request):
 def personalizar(request):
     jogos = Jogo.objects.all()
     adversarios = Jogo.objects.values_list('adversario', flat=True).distinct()
+    arbitro = Jogo.objects.values_list('arbitro', flat=True).distinct()
+    estadios =Jogo.objects.values_list('estadio', flat=True).distinct()
     locais = Jogo.objects.values_list('local_estadio', flat=True).distinct()
     locais_adv = Jogo.objects.values_list('local_adv', flat=True).distinct()
     campeonatos = Jogo.objects.values_list('campeonato', flat=True).distinct()
     autores_gol = Jogador.objects.values_list('jogador', flat=True).distinct()
-    
-    # Filtros adicionais
-    jogadores = Jogador.objects.values_list('jogador', flat=True).distinct()
-    assistentes = Jogador.objects.values_list('jogador', flat=True).distinct()
+    placar = [f"{gols_flu} x {gols_adv}" for gols_flu, gols_adv in Jogo.objects.values_list('gols_flu', 'gols_adv').distinct()]
+
+    jogadores_queryset = Jogador.objects.all()
+
+    # Filtre técnicos e jogadores a partir do queryset original
+    tecnicos = jogadores_queryset.filter(jogador__icontains='TEC').values_list('jogador', flat=True).distinct()
+    jogadores = jogadores_queryset.exclude(jogador__icontains='TEC').values_list('jogador', flat=True).distinct()
+
+    # Assistentes
+    assistentes = jogadores_queryset.values_list('jogador', flat=True).distinct()
     resultados = ['V', 'E', 'D']  # Vitória, Empate, Derrota
     
     # Captura os filtros do GET
@@ -496,6 +504,7 @@ def personalizar(request):
     mes = request.GET.get('mes')
     ano = request.GET.get('ano')
     adversario = request.GET.get('adversario')
+    estadio = request.GET.get('estadio')
     local_estadio = request.GET.get('local_estadio')
     local_adv = request.GET.get('locais_adv')
     campeonato = request.GET.get('campeonato')
@@ -553,6 +562,7 @@ def personalizar(request):
             'adversario': jogo.adversario,
             'local_adv': jogo.local_adv,
             'data': jogo.data,
+            'estadios': jogo.estadio,
             'local_estadio': jogo.local_estadio,
             'campeonato': jogo.campeonato,
             'resultado': jogo.resultado,
@@ -566,12 +576,16 @@ def personalizar(request):
     # Contexto para o template
     context = {
         'df_html': df_html,
+        'placares': placar,
+        'arbitros': arbitro,
         'adversarios': adversarios,
+        'estadios': estadios,
         'local_estadio': locais,
         'local_adv': locais_adv,
         'campeonatos': campeonatos,
         'autores_gol': autores_gol,
         'jogadores': jogadores,
+        'tecnicos': tecnicos,
         'assistentes': assistentes,
         'resultados': resultados,
     }
