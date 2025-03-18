@@ -3,6 +3,7 @@ from django.shortcuts import render
 from .models import Jogo, Gol, Escalacao, OutrosJogos, Jogador
 from collections import Counter
 from django.db.models import Q
+import json
 
 def lista_jogos(request):
     jogos = Jogo.objects.all()
@@ -478,7 +479,7 @@ def estatisticas_datas(request):
                'df_dia_semana': df_dia_semana.to_html(index=True)}
     return render(request, 'meus_jogos_app/estatisticas_datas.html', context)
 
-def personalizar(request):
+def gera_df(request):
     jogos = Jogo.objects.all()
     adversarios = Jogo.objects.values_list('adversario', flat=True).distinct()
     arbitro = Jogo.objects.values_list('arbitro', flat=True).distinct()
@@ -498,80 +499,144 @@ def personalizar(request):
     # Assistentes
     assistentes = jogadores_queryset.values_list('jogador', flat=True).distinct()
     resultados = ['V', 'E', 'D']  # Vitória, Empate, Derrota
-    
+
+    # Função para tratar os filtros que vêm como JSON
+    def tratar_filtro_json(filtro):
+        if filtro:
+            try:
+                filtro_list = json.loads(filtro)  # Converte a string JSON para um objeto Python
+                return [item['value'] for item in filtro_list]  # Extrai os valores da chave 'value'
+            except json.JSONDecodeError:
+                return []  # Se não for um JSON válido, retorna uma lista vazia
+        return []
+
     # Captura os filtros do GET
     dia = request.GET.get('dia')
     mes = request.GET.get('mes')
     ano = request.GET.get('ano')
     adversario = request.GET.get('adversario')
     estadio = request.GET.get('estadio')
-    local_estadio = request.GET.get('local_estadio')
-    local_adv = request.GET.get('locais_adv')
+    local_jogo = request.GET.get('local_jogo')
+    local_adversario = request.GET.get('local_adversario')
     campeonato = request.GET.get('campeonato')
-    autor_gol = request.GET.get('autor_gol')
-    jogador = request.GET.get('jogador')
     resultado = request.GET.get('resultado')
+    placar = request.GET.get('placar')
+    publico = request.GET.get('publico')
+    jogador = request.GET.get('jogador')
+    tecnico = request.GET.get('tecnico')
+    autor_gol = request.GET.get('autor_gol')
     assistente = request.GET.get('assistente')
+    dupla_gol = request.GET.get('dupla_gol')
+    dupla_assistencia = request.GET.get('dupla_assistencia')
 
-    # Filtros de data
-    if dia:
-        jogos = jogos.filter(data__day=dia)
-    if mes:
-        jogos = jogos.filter(data__month=mes)
-    if ano:
-        jogos = jogos.filter(data__year=ano)
+    # Trata os filtros que podem ser passados como JSON
+    dia_values = tratar_filtro_json(dia)
+    mes_values = tratar_filtro_json(mes)
+    ano_values = tratar_filtro_json(ano)
+    adversario_values = tratar_filtro_json(adversario)
+    estadio_values = tratar_filtro_json(estadio)
+    local_jogo_values = tratar_filtro_json(local_jogo)
+    local_adversario_values = tratar_filtro_json(local_adversario)
+    campeonato_values = tratar_filtro_json(campeonato)
+    resultado_values = tratar_filtro_json(resultado)
+    placar_values = tratar_filtro_json(placar)
+    jogador_values = tratar_filtro_json(jogador)
+    tecnico_values = tratar_filtro_json(tecnico)
+    autor_gol_values = tratar_filtro_json(autor_gol)
+    assistente_values = tratar_filtro_json(assistente)
+    dupla_gol_values = tratar_filtro_json(dupla_gol)
+    dupla_assistencia_values = tratar_filtro_json(dupla_assistencia)
 
-    # Filtros de outros parâmetros
-    if adversario:
-        jogos = jogos.filter(adversario__icontains=adversario)
-    if local_estadio:
-        jogos = jogos.filter(local_estadio__icontains=local_estadio)
-    if local_adv:
-        jogos = jogos.filter(local_adv__icontains=local_estadio)
-    if campeonato:
-        jogos = jogos.filter(campeonato__icontains=campeonato)
-    if resultado:
-        jogos = jogos.filter(resultado=resultado)
+    # Filtros de data (com tratamento para listas JSON)
+    if dia_values:
+        jogos = jogos.filter(data__day__in=dia_values)
+    if mes_values:
+        jogos = jogos.filter(data__month__in=mes_values)
+    if ano_values:
+        jogos = jogos.filter(data__year__in=ano_values)
 
-    # Filtro por autor do gol
-    if autor_gol:
-        jogos = jogos.filter(gols__autor_gol__icontains=autor_gol).distinct()
+    # Filtros gerais
+    if adversario_values:
+        jogos = jogos.filter(adversario__in=adversario_values)
+    if estadio_values:
+        jogos = jogos.filter(estadio__in=estadio_values)
+    if local_jogo_values:
+        jogos = jogos.filter(local_jogo__in=local_jogo_values)
+    if local_adversario_values:
+        jogos = jogos.filter(local_adversario__in=local_adversario_values)
+    if campeonato_values:
+        jogos = jogos.filter(campeonato__in=campeonato_values)
+    if resultado_values:
+        map_resultados = {
+            'Vitória': 'V',
+            'Derrota': 'D',
+            'Empate': 'E'
+        }
+        resultado_values = [map_resultados.get(resultado, resultado) for resultado in resultado_values]
+        jogos = jogos.filter(resultado__in=resultado_values)
+    if placar_values:
+        jogos = jogos.filter(placar__in=placar_values)
+    if publico:
+        jogos = jogos.filter(publico__gte=publico)
+    if tecnico_values:
+        jogos = jogos.filter(tecnico__in=tecnico_values)
 
-    # Filtro por jogador específico (que tenha marcado gol ou dado assistência)
-    if jogador:
+    # Filtros relacionados a jogadores
+    if autor_gol_values:
+        jogos = jogos.filter(gols__autor_gol__in=autor_gol_values).distinct()
+
+        # Jogador (autor ou assistente)
+    if jogador_values:
+        for jogador in jogador_values:
+            jogos = jogos.filter(escalacao__jogador=jogador)
+
+    # Assistente
+    if assistente_values:
+        jogos = jogos.filter(gols__assistencia__in=assistente_values).distinct()
+
+    # Dupla Gol e Assistência
+    if dupla_gol_values and dupla_assistencia_values:
         jogos = jogos.filter(
-            Q(gols__autor_gol__icontains=jogador) | Q(gols__id_ass__jogador__icontains=jogador)
-        )
+            Q(gols__autor_gol__in=dupla_gol_values) &
+            Q(gols__assistencia__in=dupla_assistencia_values)
+        ).distinct()
 
-    # Filtro por assistente
-    if assistente:
-        jogos = jogos.filter(gols__id_ass__jogador__icontains=assistente)
 
-    # Criação do DataFrame, incluindo autores dos gols
-    data = []
-    for jogo in jogos:
-        gols_jogo = Gol.objects.filter(id_jogo=jogo).values_list('autor_gol', flat=True)
-        
-        # Verificar se gols_jogo está vazio ou se algum valor é None
-        if gols_jogo:
-            autores = ', '.join([str(gol) if gol is not None else 'Desconhecido' for gol in gols_jogo])
-        else:
-            autores = 'Nenhum gol'
-        
-        data.append({
-            'adversario': jogo.adversario,
-            'local_adv': jogo.local_adv,
-            'data': jogo.data,
-            'estadios': jogo.estadio,
-            'local_estadio': jogo.local_estadio,
-            'campeonato': jogo.campeonato,
-            'resultado': jogo.resultado,
-            'publico': jogo.publico,
-            'goleadores': autores
-        })
+    data = {
+        "id": [jogo.id for jogo in jogos],
+        "fluminense": "Fluminense",  # Nome do time (fixo, já que não muda)
+        "placar": [f"{jogo.gols_flu} x {jogo.gols_adv}" for jogo in jogos],
+        "adversario": [f"{jogo.adversario} ({jogo.local_adv})" for jogo in jogos],
+        "estadio": [f"{jogo.estadio} ({jogo.local_estadio})" for jogo in jogos],
+        "data": [jogo.data.strftime("%d/%m/%Y") for jogo in jogos],
+        "campeonato": [jogo.campeonato for jogo in jogos],
+        "arbitro": [jogo.arbitro for jogo in jogos],
+        "publico": [jogo.publico for jogo in jogos],
+        "gols": [
+            ', '.join([
+                f"{autor} ({count})" if count > 1 else autor
+                for autor, count in Counter([gol.autor_gol.strip() for gol in jogo.gols.all()]).items()
+            ]) for jogo in jogos
+        ]
+    }
 
-    df = pd.DataFrame(data)
-    df_html = df.to_html(index=False, classes='table table-striped') if not df.empty else "<p>⚠️ Nenhum jogo encontrado.</p>"
+    # Criar o DataFrame
+    df_jogos = pd.DataFrame(data)
+
+    # Formatar o público com vírgula como separador de milhar
+    df_jogos['publico'] = df_jogos['publico'].apply(lambda x: f"{x:,}".replace(",", "."))
+
+    # Definir as colunas do DataFrame com os nomes desejados
+    df_jogos.columns = ["ID", "Fluminense", "Placar", "Adversário", "Estádio", "Data", "Campeonato", "Árbitro", "Público", "Gols"]
+
+    # Organizar as colunas na ordem desejada
+    df_jogos = df_jogos[["ID", "Fluminense", "Placar", "Adversário", "Estádio", "Data", "Campeonato", "Público", "Gols"]]
+
+    # Ordenar os jogos por ID em ordem decrescente
+    df_jogos = df_jogos.sort_values(by="ID", ascending=False)
+
+    # Converter para HTML
+    df_html = df_jogos.to_html(index=False, classes='table table-striped') if not df_jogos.empty else "<p>⚠️ Nenhum jogo encontrado.</p>"
 
     # Contexto para o template
     context = {
@@ -589,5 +654,17 @@ def personalizar(request):
         'assistentes': assistentes,
         'resultados': resultados,
     }
+
+    return context
     
+def personalizar(request):
+    
+    context = gera_df(request)
+
     return render(request, 'meus_jogos_app/personalizar.html', context)
+
+def exibir_df(request):
+    
+    context = gera_df(request)
+
+    return render(request, 'meus_jogos_app/exibir_resultado.html.html', context)

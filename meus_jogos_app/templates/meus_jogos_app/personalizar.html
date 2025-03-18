@@ -42,9 +42,9 @@
         <li class="nav-item">
             <a class="nav-link" href="{% url 'estatisticas_dados_datas' %}">Datas</a>
         </li>
-        <li class="nav-item">
+        {% comment %} <li class="nav-item">
             <a class="nav-link active" href="{% url 'personalizar' %}">Personalizar</a>
-        </li>
+        </li> {% endcomment %}
     </ul>
 
     <div class="table-container">
@@ -152,9 +152,9 @@
                 </div>
             </div>  
         </div>
-            <button type="submit" class="btn btn-primary mt-4">Filtrar</button>
+                <button type="submit" class="btn btn-primary mt-4">Filtrar</button>
         </form>
-
+    
         <div class="mt-5">
             <h2>Jogos Filtrados</h2>
             <div>
@@ -251,6 +251,16 @@
             });
 
             new Tagify(document.querySelector('#assistente'), {
+                whitelist: assistentes.sort(),
+                dropdown: { enabled: 0, maxItems: 100 }
+            });
+            
+            new Tagify(document.querySelector('#dupla_gol'), {
+                whitelist: autores.sort(),
+                dropdown: { enabled: 0, maxItems: 100 }
+            });
+            
+            new Tagify(document.querySelector('#dupla_assistencia'), {
                 whitelist: assistentes.sort(),
                 dropdown: { enabled: 0, maxItems: 100 }
             });

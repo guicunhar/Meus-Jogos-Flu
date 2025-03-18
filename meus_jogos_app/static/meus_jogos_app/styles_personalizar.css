@@ -52,6 +52,7 @@ body{
     justify-content: space-around;
     margin-left: 30px;
     margin-right: 30px;
+    justify-content: center;  /* Centraliza horizontalmente */
 }
 
 .table-container div {
@@ -117,4 +118,10 @@ table tr:hover {
 .tagify .tagify__dropdown {
     max-height: 150px;  /* Define a altura máxima da lista de sugestões */
     overflow-y: auto;   /* Ativa o scroll vertical se necessário */
+}
+
+.btn {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
 }
