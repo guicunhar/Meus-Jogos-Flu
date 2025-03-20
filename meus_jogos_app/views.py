@@ -6,35 +6,30 @@ from django.db.models import Q
 import json
 
 def lista_jogos(request):
-    jogos = Jogo.objects.all()
-    
-    data = {
-        "id": [jogo.id for jogo in jogos],
-        "fluminense": "Fluminense",
-        "placar": [f"{jogo.gols_flu} x {jogo.gols_adv}" for jogo in jogos],
-        "adversario": [f"{jogo.adversario} ({jogo.local_adv})" for jogo in jogos],
-        "estadio": [f"{jogo.estadio} ({jogo.local_estadio})" for jogo in jogos],
-        "data": [jogo.data.strftime("%d/%m/%Y") for jogo in jogos],
-        "campeonato": [jogo.campeonato for jogo in jogos],
-        "arbitro": [jogo.arbitro for jogo in jogos],
-        "publico": [jogo.publico for jogo in jogos],
-        "gols": [
-            ', '.join([
-                f"{autor} ({count})" if count > 1 else autor
-                for autor, count in Counter([gol.autor_gol.strip() for gol in jogo.gols.all()]).items()
-            ])
-            for jogo in jogos
-        ]
+    jogos = Jogo.objects.all().order_by('-id')  # Ordenação no próprio queryset
 
-    }
+    data = []
+    for jogo in jogos:
+        gols = Counter([gol.autor_gol.strip() for gol in jogo.gols.all()])
+        gols_formatados = ', '.join(
+            f"{autor} ({count})" if count > 1 else autor
+            for autor, count in gols.items()
+        )
 
-    df_jogos = pd.DataFrame(data)
-    df_jogos['publico'] = df_jogos['publico'].apply(lambda x: f"{x:,}".replace(",","."))
-    df_jogos.columns = ["ID", "","Placar","Adversário","Estádio","Data","Campeonato","Árbitro","Público","Gols"]
-    df_jogos = df_jogos[["ID", "","Placar","Adversário","Estádio","Data","Campeonato","Público","Gols"]]
-    df_jogos= df_jogos.sort_values(by="ID", ascending=False)    
+        data.append({
+            "id": jogo.id,
+            "fluminense": "Fluminense",
+            "placar": f"{jogo.gols_flu} x {jogo.gols_adv}",
+            "adversario": f"{jogo.adversario} ({jogo.local_adv})",
+            "estadio": f"{jogo.estadio} ({jogo.local_estadio})",
+            "data": jogo.data.strftime("%d/%m/%Y"),
+            "campeonato": jogo.campeonato,
+            "arbitro": jogo.arbitro,
+            "publico": f"{jogo.publico:,}".replace(",", "."),
+            "gols": gols_formatados,
+        })
 
-    context = {'df_jogos': df_jogos.to_html(index=False)}
+    context = {'jogos': data}
     return render(request, 'meus_jogos_app/jogos_flu.html', context)
 
 def lista_outros_jogos(request):
