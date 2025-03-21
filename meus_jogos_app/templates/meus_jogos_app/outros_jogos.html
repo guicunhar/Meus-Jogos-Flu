@@ -35,9 +35,35 @@
             <a class="nav-link active" aria-current="page" href="{% url 'outros_jogos' %}">Outros Jogos</a>
         </li>
       </ul>
-    <div class = "table-container">
-        {{ df_outros_jogos|safe }}
-    </div>
+        <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Mandante</th>
+                    <th>Placar</th>
+                    <th>Adversário</th>
+                    <th>Estádio</th>
+                    <th>Data</th>
+                    <th>Campeonato</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for jogo in outros_jogos %}
+                <tr>
+                    <td>{{ jogo.id }}</td>
+                    <td>{{ jogo.mandante }}</td>
+                    <td>{{ jogo.placar }}</td>
+                    <td>{{ jogo.visitante }}</td>
+                    <td>{{ jogo.estadio }}</td>
+                    <td>{{ jogo.data }}</td>
+                    <td>{{ jogo.campeonato }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
     <script src="{% static 'meus_jogos_app/script.js' %}"></script>
 </body>
 </html>

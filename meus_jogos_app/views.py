@@ -24,7 +24,6 @@ def lista_jogos(request):
             "estadio": f"{jogo.estadio} ({jogo.local_estadio})",
             "data": jogo.data.strftime("%d/%m/%Y"),
             "campeonato": jogo.campeonato,
-            "arbitro": jogo.arbitro,
             "publico": f"{jogo.publico:,}".replace(",", "."),
             "gols": gols_formatados,
         })
@@ -33,23 +32,21 @@ def lista_jogos(request):
     return render(request, 'meus_jogos_app/jogos_flu.html', context)
 
 def lista_outros_jogos(request):
-    jogos = OutrosJogos.objects.all()
-    
-    data = {
-        "id": [jogo.id for jogo in jogos],
-        "mandante": [jogo.mandante for jogo in jogos],
-        "placar": [f"{jogo.gols_mandante} x {jogo.gols_visitante}" for jogo in jogos],
-        "visitante": [jogo.visitante for jogo in jogos],
-        "estadio": [f"{jogo.estadio} ({jogo.local_estadio})" for jogo in jogos],
-        "data": [jogo.data.strftime("%d/%m/%Y") for jogo in jogos],
-        "campeonato": [jogo.campeonato for jogo in jogos],
-    }
+    jogos = OutrosJogos.objects.all().order_by('-id')
 
-    df_outros_jogos = pd.DataFrame(data)
-    df_outros_jogos.columns = ["ID", "Mandante","Placar","Visitante","Estádio","Data","Campeonato"]
-    df_outros_jogos= df_outros_jogos.sort_values(by="ID", ascending=False)
+    data = []
+    for jogo in jogos:
+        data.append({
+            "id": jogo.id,
+            "mandante": jogo.mandante,
+            "placar": f"{jogo.gols_mandante} x {jogo.gols_visitante}",
+            "visitante": jogo.visitante,
+            "estadio": f"{jogo.estadio} ({jogo.local_estadio})",
+            "data": jogo.data.strftime("%d/%m/%Y"),
+            "campeonato": jogo.campeonato,
+        })
 
-    context = {'df_outros_jogos': df_outros_jogos.to_html(index=False)}
+    context = {'outros_jogos': data}
     return render(request, 'meus_jogos_app/outros_jogos.html', context)
 
 def estatisticas_jogadores(request):
