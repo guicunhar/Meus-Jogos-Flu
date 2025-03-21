@@ -166,7 +166,7 @@ def estatisticas_jogadores(request):
                'df_assists': df_assists.to_html(index=True),
                'df_part': df_part.to_html(index=True),
                'df_dupla': df_dupla.to_html(index=True),
-               'df_mais_jogos': df_mais_jogos.to_html(index=True),
+               'df_mais_jogos': df_mais_jogos.to_dict(orient='records'),
                'df_mais_tec': df_mais_tec.to_html(index=True),
                'df_art_ano': df_art_ano.to_html(index=True),
                'df_art_time': df_art_time.to_html(index=True)}
