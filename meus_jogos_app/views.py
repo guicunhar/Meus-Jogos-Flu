@@ -118,7 +118,7 @@ def estatisticas_jogadores(request):
     top_participacao = top_participacao[["jogador","g/a","gols","assists"]]
     df_part = top_participacao
     df_part = df_part.iloc[1:].reset_index(drop=True)
-    df_part.columns = ["Jogador", "G/A","Gols","Assists"]
+    df_part.columns = ["Jogador", "GA","Gols","Assists"]
     df_part.index = range(1, len(df_part) + 1)
 
     df_dupla =  pd.DataFrame(data_gols)
@@ -134,10 +134,10 @@ def estatisticas_jogadores(request):
     df_mais_jogos = df_mais_jogos["jogador"].value_counts().reset_index()
     df_mais_jogos.columns = ["Jogador", "Jogos"]
     df_mais_jogos.index = range(1, len(df_mais_jogos) + 1)
-    
+
     df_mais_tec =  pd.DataFrame(data_tec)
     df_mais_tec = df_mais_tec["jogador"].value_counts().reset_index()
-    df_mais_tec.columns = ["Técnico", "Jogos"]
+    df_mais_tec.columns = ["Tecnico", "Jogos"]
     df_mais_tec.index = range(1, len(df_mais_tec) + 1)
 
     df_art_ano_jogos = pd.DataFrame(data_jogos)
@@ -158,18 +158,18 @@ def estatisticas_jogadores(request):
     df_art_time = df_art_ano_jogos.merge(df_art_ano_gols, left_on='id', right_on='id_jogo')
     df_art_time = df_art_time.groupby(['adversario', 'autor_gol']).size().reset_index(name='gols')
     df_art_time = df_art_time.sort_values(by=['gols'], ascending=[False])
-    df_art_time.columns = ["Adversário", "Jogador", "Gols"]
-    df_art_time = df_art_time[["Jogador","Adversário","Gols"]]
+    df_art_time.columns = ["Adversario", "Jogador", "Gols"]
+    df_art_time = df_art_time[["Jogador","Adversario","Gols"]]
     df_art_time.index = range(1, len(df_art_time) + 1)
 
-    context = {'df_gols': df_gols.to_html(index=True),
-               'df_assists': df_assists.to_html(index=True),
-               'df_part': df_part.to_html(index=True),
-               'df_dupla': df_dupla.to_html(index=True),
+    context = {'df_gols': df_gols.to_dict(orient='records'),
+               'df_assists': df_assists.to_dict(orient='records'),
+               'df_part': df_part.to_dict(orient='records'),
+               'df_dupla': df_dupla.to_dict(orient='records'),
                'df_mais_jogos': df_mais_jogos.to_dict(orient='records'),
-               'df_mais_tec': df_mais_tec.to_html(index=True),
-               'df_art_ano': df_art_ano.to_html(index=True),
-               'df_art_time': df_art_time.to_html(index=True)}
+               'df_mais_tec': df_mais_tec.to_dict(orient='records'),
+               'df_art_ano': df_art_ano.to_dict(orient='records'),
+               'df_art_time': df_art_time.to_dict(orient='records')}
 
     return render(request, 'meus_jogos_app/estatisticas_jogadores.html', context)
 

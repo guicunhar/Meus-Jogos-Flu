@@ -70,37 +70,164 @@
             </div>
             <div class="table-wrapper">
                 <div class="section-title">Técnicos com Mais Jogos</div>
-                {{ df_mais_tec|safe }}
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Técnicos</th>
+                            <th>Jogos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for jogo in df_mais_tec %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ jogo.Tecnico }}</td>
+                            <td>{{ jogo.Jogos }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="table-row">
             <div class="table-wrapper">
                 <div class="section-title">Mais Gols</div>
-                {{ df_gols|safe }} 
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Jogador</th>
+                            <th>Gols</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for jogo in df_gols %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ jogo.Jogador }}</td>
+                            <td>{{ jogo.Gols }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
                 <div class="table-wrapper">
                     <div class="section-title">Mais Assistências</div>
-                    {{ df_assists|safe }}
+                    <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Jogador</th>
+                            <th>Assists</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for jogo in df_assists %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ jogo.Jogador }}</td>
+                            <td>{{ jogo.Assists }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                 </div>
         </div>
         <div class="table-row">
             <div class="table-wrapper">
                 <div class="section-title">Mais Participações em Gol</div>
-                {{ df_part|safe }} 
+                    <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Jogador</th>
+                            <th>G/A</th>
+                            <th>Gols</th>
+                            <th>Assists</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for jogo in df_part %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ jogo.Jogador }}</td>
+                            <td>{{ jogo.GA }}</td>
+                            <td>{{ jogo.Gols }}</td>
+                            <td>{{ jogo.Assists }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
             <div class="table-wrapper">
                 <div class="section-title">Duplas com mais Gols</div>
-                {{ df_dupla|safe }} 
+                    <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Dupla</th>
+                            <th>Gols</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for jogo in df_dupla %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ jogo.Dupla }}</td>
+                            <td>{{ jogo.Gols }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="table-row">
             <div class="table-wrapper">
                 <div class="section-title">Mais Gols por Ano</div>
-                {{ df_art_ano|safe }}
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Jogador</th>
+                            <th>Ano</th>
+                            <th>Gols</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for jogo in df_art_ano %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ jogo.Jogador }}</td>
+                            <td>{{ jogo.Ano }}</td>
+                            <td>{{ jogo.Gols }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
             <div class="table-wrapper">
-                <div class="section-title">Mais Gols por Ano</div>
-                {{ df_art_time|safe }}
+                <div class="section-title">Mais Gols por Adversário</div>
+                    <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Jogador</th>
+                            <th>Adversário</th>
+                            <th>Gols</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for jogo in df_art_time %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ jogo.Jogador }}</td>
+                            <td>{{ jogo.Adversario }}</td>
+                            <td>{{ jogo.Gols }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
     </div>
     
