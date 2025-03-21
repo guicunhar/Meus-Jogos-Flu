@@ -210,21 +210,21 @@ def estatisticas_gerais(request):
     df_jogos = df_jogos[1:].reset_index(drop=True)
     df_jogos["Total"] = df_jogos["V"] + df_jogos["E"] + df_jogos["D"]
     aprov = (3*df_jogos["V"] + df_jogos["E"])/(3*(df_jogos["Total"]))*100
-    df_jogos["Aprov. %"] = round(float(aprov),2)
+    df_jogos["Aprov"] = round(float(aprov),2)
     df_gols_total = pd.DataFrame(data_jogos)
     df_gols_total["gols_flu"] = df_gols_total['gols_flu'].sum()
     df_gols_total["gols_adv"] = df_gols_total['gols_adv'].sum()
     df_gols_total = df_gols_total[["gols_flu","gols_adv"]].iloc[:1,:]
-    df_gols_total.columns = ["Gols Marcados","Gols Sofridos"]
+    df_gols_total.columns = ["GP","GS"]
 
     df_estado = pd.DataFrame(data_jogos)
     df_estado = df_estado[["local_estadio", "resultado"]]
     df_estado = df_estado.groupby("local_estadio")["resultado"].value_counts().unstack(fill_value=0)
     df_estado["Total"] = df_estado.sum(axis=1)
-    df_estado["Aprov. %"] = round((3*df_estado["V"] + df_estado["E"]) / (3*df_estado["Total"])*100,2)
+    df_estado["Aprov"] = round((3*df_estado["V"] + df_estado["E"]) / (3*df_estado["Total"])*100,2)
     df_estado = df_estado.reset_index()
     df_estado.columns.name = None
-    df_estado = df_estado[["local_estadio", "Total", "V", "E", "D", "Aprov. %"]]
+    df_estado = df_estado[["local_estadio", "Total", "V", "E", "D", "Aprov"]]
     df_estado = df_estado.rename(columns={"local_estadio": "Estado"})
     df_estado = df_estado.sort_values(by="Total", ascending=False)
     df_estado.index = range(1, len(df_estado) + 1)
@@ -265,9 +265,9 @@ def estatisticas_gerais(request):
 
 
 
-    context = {'df_jogos': df_jogos.to_html(index=False),
-               'df_gols_total': df_gols_total.to_html(index=False),
-               'df_estado': df_estado.to_html(index=True),
+    context = {'df_jogos': df_jogos.to_dict(orient='records'),
+               'df_gols_total': df_gols_total.to_dict(orient='records'),
+               'df_estado': df_estado.to_dict(orient='records'),
                'df_estadio': df_estadio.to_html(index=True),
                'df_arbitro': df_arbitro.to_html(index=True),
                'df_placares': df_placares.to_html(index=True),
