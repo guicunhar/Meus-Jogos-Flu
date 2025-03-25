@@ -230,49 +230,58 @@ def estatisticas_gerais(request):
     df_estado.index = range(1, len(df_estado) + 1)
 
     df_estadio = pd.DataFrame(data_jogos)
-    df_estadio= df_estadio["estadio"].value_counts().reset_index()
-    df_estadio.columns = ["Estádio","Jogos"]
+    df_estadio = df_estadio[["estadio", "resultado"]]
+    df_estadio= df_estadio.groupby("estadio")["resultado"].value_counts().unstack(fill_value=0)
+    df_estadio["Total"] = df_estadio.sum(axis=1)
+    df_estadio["Aprov"] = round((3*df_estadio["V"] + df_estadio["E"]) / (3*df_estadio["Total"])*100,2)
+    df_estadio = df_estadio.reset_index()
+    df_estadio.columns.name = None
+    df_estadio.columns = ["estadio","D", "E", "V", "Total", "Aprov"]
+    df_estadio = df_estadio.sort_values(by="Total", ascending=False)
     df_estadio.index = range(1, len(df_estadio) + 1)
 
     df_arbitro = pd.DataFrame(data_jogos)
     df_arbitro = df_arbitro[["arbitro", "resultado"]]
     df_arbitro = df_arbitro.groupby("arbitro")["resultado"].value_counts().unstack(fill_value=0)
     df_arbitro["Total"] = df_arbitro.sum(axis=1)
-    df_arbitro["Aprov. %"] = round((3*df_arbitro["V"] + df_arbitro["E"]) / (3*df_arbitro["Total"])*100,2)
+    df_arbitro["Aprov"] = round((3*df_arbitro["V"] + df_arbitro["E"]) / (3*df_arbitro["Total"])*100,2)
     df_arbitro = df_arbitro.reset_index()
     df_arbitro.columns.name = None
-    df_arbitro = df_arbitro[["arbitro", "Total", "V", "E", "D", "Aprov. %"]]
-    df_arbitro = df_arbitro.rename(columns={"arbitro": "Árbitro"})
+    df_arbitro = df_arbitro[["arbitro", "Total", "V", "E", "D", "Aprov"]]
     df_arbitro = df_arbitro.sort_values(by="Total", ascending=False)
     df_arbitro.index = range(1, len(df_arbitro) + 1)
 
     df_placares = pd.DataFrame(data_jogos)
     df_placares= df_placares["placar"].value_counts().reset_index()
-    df_placares.columns = ["Placar","Jogos"]
+    df_placares.columns = ["placar","jogos"]
     df_placares.index = range(1, len(df_placares) + 1)
 
-    df_campeonatos = pd.DataFrame(data_jogos)
-    df_campeonatos= df_campeonatos["campeonato"].value_counts().reset_index()
-    df_campeonatos.columns = ["Campeonato","Jogos"]
-    df_campeonatos.index = range(1, len(df_campeonatos) + 1)
+    df_campeonato = pd.DataFrame(data_jogos)
+    df_campeonato = df_campeonato[["campeonato", "resultado"]]
+    df_campeonato= df_campeonato.groupby("campeonato")["resultado"].value_counts().unstack(fill_value=0)
+    df_campeonato["Total"] = df_campeonato.sum(axis=1)
+    df_campeonato["Aprov"] = round((3*df_campeonato["V"] + df_campeonato["E"]) / (3*df_campeonato["Total"])*100,2)
+    df_campeonato = df_campeonato.reset_index()
+    df_campeonato.columns.name = None
+    df_campeonato.columns = ["campeonato","D", "E", "V", "Total", "Aprov"]
+    df_campeonato = df_campeonato.sort_values(by="Total", ascending=False)
+    df_campeonato.index = range(1, len(df_campeonato) + 1)
 
     df_publico = pd.DataFrame(data_jogos)
     df_publico = df_publico[['data', 'placar','adversario','estadio','campeonato','publico']].sort_values(by='publico', ascending=False).reset_index()
     df_publico = df_publico[['data', 'placar','adversario','estadio','campeonato','publico']]
     df_publico['publico'] = df_publico['publico'].apply(lambda x: f"{x:,}".replace(",","."))
-    df_publico.columns = ["Data","Placar","Adversário","Estádio","Campeonato","Público"]
+    df_publico.columns = ["data","placar","adversario","estadio","campeonato","publico"]
     df_publico.index = range(1, len(df_publico) + 1)
-
-
 
     context = {'df_jogos': df_jogos.to_dict(orient='records'),
                'df_gols_total': df_gols_total.to_dict(orient='records'),
                'df_estado': df_estado.to_dict(orient='records'),
-               'df_estadio': df_estadio.to_html(index=True),
-               'df_arbitro': df_arbitro.to_html(index=True),
-               'df_placares': df_placares.to_html(index=True),
-               'df_campeonatos': df_campeonatos.to_html(index=True),
-               'df_publico': df_publico.to_html(index=True)}
+               'df_estadio': df_estadio.to_dict(orient='records'),
+               'df_arbitro': df_arbitro.to_dict(orient='records'),
+               'df_placares': df_placares.to_dict(orient='records'),
+               'df_campeonato': df_campeonato.to_dict(orient='records'),
+               'df_publico': df_publico.to_dict(orient='records')}
 
     return render(request, 'meus_jogos_app/estatisticas_gerais.html', context)
 
