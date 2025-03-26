@@ -321,11 +321,10 @@ def estatisticas_adv(request):
     df_adversarios = df_adversarios[["adversario", "resultado"]]
     df_adversarios = df_adversarios.groupby("adversario")["resultado"].value_counts().unstack(fill_value=0)
     df_adversarios["Jogos"] = df_adversarios.sum(axis=1)
-    df_adversarios["Aprov. %"] = round((3*df_adversarios["V"] + df_adversarios["E"]) / (3*df_adversarios["Jogos"])*100,2)
+    df_adversarios["Aprov"] = round((3*df_adversarios["V"] + df_adversarios["E"]) / (3*df_adversarios["Jogos"])*100,2)
     df_adversarios = df_adversarios.reset_index()
     df_adversarios.columns.name = None
-    df_adversarios = df_adversarios[["adversario", "Jogos", "V", "E", "D", "Aprov. %"]]
-    df_adversarios = df_adversarios.rename(columns={"adversario": "Adversário"})
+    df_adversarios = df_adversarios[["adversario", "Jogos", "V", "E", "D", "Aprov"]]
     df_adversarios = df_adversarios.sort_values(by="Jogos", ascending=False)
     df_adversarios.index = range(1, len(df_adversarios) + 1)
 
@@ -333,11 +332,10 @@ def estatisticas_adv(request):
     df_local_adv = df_local_adv[["local_adv", "resultado"]]
     df_local_adv = df_local_adv.groupby("local_adv")["resultado"].value_counts().unstack(fill_value=0)
     df_local_adv["Jogos"] = df_local_adv.sum(axis=1)
-    df_local_adv["Aprov. %"] = round((3*df_local_adv["V"] + df_local_adv["E"]) / (3*df_local_adv["Jogos"])*100,2)
+    df_local_adv["Aprov"] = round((3*df_local_adv["V"] + df_local_adv["E"]) / (3*df_local_adv["Jogos"])*100,2)
     df_local_adv = df_local_adv.reset_index()
     df_local_adv.columns.name = None
-    df_local_adv = df_local_adv[["local_adv", "Jogos", "V", "E", "D", "Aprov. %"]]
-    df_local_adv = df_local_adv.rename(columns={"local_adv": "Local do Adv."})
+    df_local_adv = df_local_adv[["local_adv", "Jogos", "V", "E", "D", "Aprov"]]
     df_local_adv = df_local_adv.sort_values(by="Jogos", ascending=False)
     df_local_adv.index = range(1, len(df_local_adv) + 1)
 
@@ -371,10 +369,10 @@ def estatisticas_adv(request):
     'TO': "Tocantins",
     'LAS': "América do Sul"
 }
-    df_local_adv["Local do Adv."] = df_local_adv["Local do Adv."].map(local_map)
+    df_local_adv["local_adv"] = df_local_adv["local_adv"].map(local_map)
     
-    context = {'df_adversarios': df_adversarios.to_html(index=True),
-                'df_local_adv': df_local_adv.to_html(index=True),}
+    context = {'df_adversarios': df_adversarios.to_dict(orient='records'),
+                'df_local_adv': df_local_adv.to_dict(orient='records'),}
 
     return render(request, 'meus_jogos_app/estatisticas_adversarios.html', context)
 
@@ -428,11 +426,10 @@ def estatisticas_datas(request):
     df_mes = df_mes[["mes", "resultado"]]
     df_mes = df_mes.groupby("mes")["resultado"].value_counts().unstack(fill_value=0)
     df_mes["Total"] = df_mes.sum(axis=1)
-    df_mes["Aprov. %"] = round((3*df_mes["V"] + df_mes["E"]) / (3*df_mes["Total"])*100,2)
+    df_mes["Aprov"] = round((3*df_mes["V"] + df_mes["E"]) / (3*df_mes["Total"])*100,2)
     df_mes = df_mes.reset_index()
     df_mes.columns.name = None
-    df_mes = df_mes[["mes", "Total", "V", "E", "D", "Aprov. %"]]
-    df_mes = df_mes.rename(columns={"mes": "Mês"})
+    df_mes = df_mes[["mes", "Total", "V", "E", "D", "Aprov"]]
     df_mes = df_mes.sort_values(by="Total", ascending=False)
     df_mes.index = range(1, len(df_mes) + 1)
 
@@ -440,11 +437,10 @@ def estatisticas_datas(request):
     df_ano = df_ano[["ano", "resultado"]]
     df_ano = df_ano.groupby("ano")["resultado"].value_counts().unstack(fill_value=0)
     df_ano["Total"] = df_ano.sum(axis=1)
-    df_ano["Aprov. %"] = round((3*df_ano["V"] + df_ano["E"]) / (3*df_ano["Total"])*100,2)
+    df_ano["aprov"] = round((3*df_ano["V"] + df_ano["E"]) / (3*df_ano["Total"])*100,2)
     df_ano = df_ano.reset_index()
     df_ano.columns.name = None
-    df_ano = df_ano[["ano", "Total", "V", "E", "D", "Aprov. %"]]
-    df_ano = df_ano.rename(columns={"ano": "Ano"})
+    df_ano = df_ano[["ano", "Total", "V", "E", "D", "aprov"]]
     df_ano = df_ano.sort_values(by="Total", ascending=False)
     df_ano.index = range(1, len(df_ano) + 1)
 
@@ -452,11 +448,10 @@ def estatisticas_datas(request):
     df_dia = df_dia[["dia", "resultado"]]
     df_dia = df_dia.groupby("dia")["resultado"].value_counts().unstack(fill_value=0)
     df_dia["Total"] = df_dia.sum(axis=1)
-    df_dia["Aprov. %"] = round((3*df_dia["V"] + df_dia["E"]) / (3*df_dia["Total"])*100,2)
+    df_dia["Aprov"] = round((3*df_dia["V"] + df_dia["E"]) / (3*df_dia["Total"])*100,2)
     df_dia = df_dia.reset_index()
     df_dia.columns.name = None
-    df_dia = df_dia[["dia", "Total", "V", "E", "D", "Aprov. %"]]
-    df_dia = df_dia.rename(columns={"dia": "Dia"})
+    df_dia = df_dia[["dia", "Total", "V", "E", "D", "Aprov"]]
     df_dia = df_dia.sort_values(by="Total", ascending=False)
     df_dia.index = range(1, len(df_dia) + 1)
 
@@ -466,18 +461,17 @@ def estatisticas_datas(request):
     df_dia_semana['dia_da_semana'] = df_dia_semana['dia_da_semana'].astype(int).map(dias_map)
     df_dia_semana = df_dia_semana.groupby("dia_da_semana")["resultado"].value_counts().unstack(fill_value=0)
     df_dia_semana["Total"] = df_dia_semana.sum(axis=1)
-    df_dia_semana["Aprov. %"] = round((3*df_dia_semana["V"] + df_dia_semana["E"]) / (3*df_dia_semana["Total"])*100,2)
+    df_dia_semana["Aprov"] = round((3*df_dia_semana["V"] + df_dia_semana["E"]) / (3*df_dia_semana["Total"])*100,2)
     df_dia_semana = df_dia_semana.reset_index()
     df_dia_semana.columns.name = None
-    df_dia_semana = df_dia_semana[["dia_da_semana", "Total", "V", "E", "D", "Aprov. %"]]
-    df_dia_semana = df_dia_semana.rename(columns={"dia_da_semana": "Dia da Semana"})
+    df_dia_semana = df_dia_semana[["dia_da_semana", "Total", "V", "E", "D", "Aprov"]]
     df_dia_semana = df_dia_semana.sort_values(by="Total", ascending=False)
     df_dia_semana.index = range(1, len(df_dia_semana) + 1)
 
-    context = {'df_mes': df_mes.to_html(index=True),
-               'df_ano': df_ano.to_html(index=True),
-               'df_dia': df_dia.to_html(index=True),
-               'df_dia_semana': df_dia_semana.to_html(index=True)}
+    context = {'df_mes': df_mes.to_dict(orient='records'),
+               'df_ano': df_ano.to_dict(orient='records'),
+               'df_dia': df_dia.to_dict(orient='records'),
+               'df_dia_semana': df_dia_semana.to_dict(orient='records')}
     return render(request, 'meus_jogos_app/estatisticas_datas.html', context)
 
 def gera_df(request):
